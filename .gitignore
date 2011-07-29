@@ -3,3 +3,4 @@
 tests/whoosh_index
 *.egg
 *.egg-info
+tests/.tox
