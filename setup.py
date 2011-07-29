@@ -9,7 +9,7 @@ setup(
     long_description=codecs.open(path.join(path.dirname(__file__), 'README.rst')).read(),
     author='Jannis Leidel',
     author_email='jannis@leidel.info',
-    url='http://github.com/jezdez/celery-haystack',
+    url='http://github.com/ennio/celery-haystack',
     packages=['celery_haystack'],
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -19,6 +19,8 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
         'Topic :: Utilities',
     ],
     setup_requires=[
