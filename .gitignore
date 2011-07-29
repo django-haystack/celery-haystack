@@ -1,0 +1,5 @@
+.DS_Store
+*.pyc
+tests/whoosh_index
+*.egg
+*.egg-info
