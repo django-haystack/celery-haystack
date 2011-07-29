@@ -1,0 +1,7 @@
+django
+#django-haystack
+git+https://github.com/toastdriven/django-haystack.git
+
+django-celery
+celery
+Whoosh
