@@ -16,9 +16,9 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Topic :: Utilities'
+        'Topic :: Utilities',
     ],
-    setup_requires = [
+    setup_requires=[
         'versiontools >= 1.5',
     ],
 )

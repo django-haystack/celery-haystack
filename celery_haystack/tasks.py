@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.management import call_command
 from django.db.models.loading import get_model
@@ -6,30 +5,15 @@ from django.db.models.loading import get_model
 from celery.task import Task
 
 from haystack import connections
-from haystack.constants import DEFAULT_ALIAS
 from haystack.exceptions import NotHandled
 
-
-CELERY_HAYSTACK_DEFAULT_ALIAS = getattr(settings,
-    'CELERY_HAYSTACK_USING', DEFAULT_ALIAS)
-CELERY_HAYSTACK_COMMAND_BATCH_SIZE = getattr(settings,
-    'CELERY_HAYSTACK_COMMAND_BATCH_SIZE', None)
-CELERY_HAYSTACK_COMMAND_AGE = getattr(settings,
-    'CELERY_HAYSTACK_COMMAND_AGE', None)
-CELERY_HAYSTACK_COMMAND_REMOVE = getattr(settings,
-    'CELERY_HAYSTACK_COMMAND_REMOVE', False)
-CELERY_HAYSTACK_COMMAND_WORKERS = getattr(settings,
-    'CELERY_HAYSTACK_COMMAND_WORKERS', 0)
-CELERY_HAYSTACK_COMMAND_APPS = getattr(settings,
-    'CELERY_HAYSTACK_COMMAND_APPS', [])
-CELERY_HAYSTACK_COMMAND_VERBOSITY = getattr(settings,
-    'CELERY_HAYSTACK_COMMAND_VERBOSITY', 1)
+from celery_haystack import conf
 
 
 class CeleryHaystackSignalHandler(Task):
-    max_retries = 1
-    default_retry_delay = 5 * 60
-    using = CELERY_HAYSTACK_DEFAULT_ALIAS
+    max_retries = conf.MAX_RETRIES
+    default_retry_delay = conf.RETRY_DELAY
+    using = conf.DEFAULT_ALIAS
 
     def split_identifier(self, identifier, **kwargs):
         """
@@ -147,15 +131,15 @@ class CeleryHaystackUpdateIndex(Task):
         logger.info("Starting update index")
         # Run the update_index management command
         defaults = {
-            'batchsize': CELERY_HAYSTACK_COMMAND_BATCH_SIZE,
-            'age': CELERY_HAYSTACK_COMMAND_AGE,
-            'remove': CELERY_HAYSTACK_COMMAND_REMOVE,
-            'using': CELERY_HAYSTACK_DEFAULT_ALIAS,
-            'workers': int(CELERY_HAYSTACK_COMMAND_WORKERS),
-            'verbosity': int(CELERY_HAYSTACK_COMMAND_VERBOSITY),
+            'batchsize': conf.COMMAND_BATCH_SIZE,
+            'age': conf.COMMAND_AGE,
+            'remove': conf.COMMAND_REMOVE,
+            'using': conf.DEFAULT_ALIAS,
+            'workers': int(conf.COMMAND_WORKERS),
+            'verbosity': int(conf.COMMAND_VERBOSITY),
         }
         defaults.update(kwargs)
         if apps is None:
-            apps = CELERY_HAYSTACK_COMMAND_APPS
+            apps = conf.COMMAND_APPS
         call_command('update_index', *apps, **defaults)
         logger.info("Finishing update index")
