@@ -1,9 +1,12 @@
+from os import path
+import codecs
 from setuptools import setup
 
 setup(
     name='celery-haystack',
     version=":versiontools:celery_haystack:",
     description='An app for integrating Celery with Haystack.',
+    long_description=codecs.open(path.join(path.dirname(__file__), 'README.rst')).read(),
     author='Jannis Leidel',
     author_email='jannis@leidel.info',
     url='http://github.com/jezdez/celery-haystack',
