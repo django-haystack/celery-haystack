@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name='celery-haystack',
@@ -7,9 +7,9 @@ setup(
     author='Jannis Leidel',
     author_email='jannis@leidel.info',
     url='http://github.com/jezdez/celery-haystack',
-    packages=find_packages(),
+    packages=['celery_haystack'],
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 3 - Alpha",
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',

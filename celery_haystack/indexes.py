@@ -9,13 +9,7 @@ from celery_haystack.utils import get_update_task
 class CelerySearchIndex(indexes.SearchIndex):
     """
     A ``SearchIndex`` subclass that enqueues updates/deletes for later
-    processing.
-
-    This allows page loads to remain snappy (as appending to a queue is a
-    very fast operation) and background updating of the index, allowing you
-    to maintain near real-time results without impacting user experience.
-
-    Make the fast, go go go.
+    processing using Celery.
     """
     def __init__(self, *args, **kwargs):
         super(CelerySearchIndex, self).__init__(*args, **kwargs)
@@ -47,7 +41,6 @@ class CelerySearchIndex(indexes.SearchIndex):
 
     def enqueue(self, action, instance):
         """
-
         Shoves a message about how to update the index into the queue.
 
         This is a standardized string, resembling something like::
