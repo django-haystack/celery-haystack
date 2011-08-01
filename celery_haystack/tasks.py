@@ -109,7 +109,6 @@ class CeleryHaystackSignalHandler(Task):
                 'update': current_index.update_object,
                 'delete': current_index.remove_object,
             }
-            print "yeah", current_index, instance, instance.pk, "woo"
             handlers[action](instance, using=self.using)
         except KeyError, exc:
             logger.error("Unrecognized action '%s'. Moving on..." % action)
