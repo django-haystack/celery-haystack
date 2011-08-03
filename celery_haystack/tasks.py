@@ -99,6 +99,7 @@ class CeleryHaystackSignalHandler(Task):
         instance = self.get_instance(model_class, pk, **kwargs)
         if instance is None:
             logger.debug("Didn't update index for '%s'" % identifier)
+            return
 
         # Call the appropriate handler of the current index and
         # handle exception if neccessary
