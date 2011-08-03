@@ -14,23 +14,29 @@ class CelerySearchIndex(indexes.SearchIndex):
     def __init__(self, *args, **kwargs):
         super(CelerySearchIndex, self).__init__(*args, **kwargs)
         self.task_cls = get_update_task()
+        self.has_get_model = hasattr(self, 'get_model')
+
+    def handle_model(self, model):
+        if model is None and self.has_get_model:
+            return self.get_model()
+        return model
 
     # We override the built-in _setup_* methods to connect the enqueuing
     # operation.
-    def _setup_save(self):
-        model = self.get_model()
+    def _setup_save(self, model=None):
+        model = self.handle_model(model)
         signals.post_save.connect(self.enqueue_save, sender=model)
 
-    def _setup_delete(self):
-        model = self.get_model()
+    def _setup_delete(self, model=None):
+        model = self.handle_model(model)
         signals.post_delete.connect(self.enqueue_delete, sender=model)
 
-    def _teardown_save(self):
-        model = self.get_model()
+    def _teardown_save(self, model=None):
+        model = self.handle_model(model)
         signals.post_save.disconnect(self.enqueue_save, sender=model)
 
-    def _teardown_delete(self):
-        model = self.get_model()
+    def _teardown_delete(self, model=None):
+        model = self.handle_model(model)
         signals.post_delete.disconnect(self.enqueue_delete, sender=model)
 
     def enqueue_save(self, instance, **kwargs):
