@@ -1,7 +1,8 @@
-from haystack.constants import DEFAULT_ALIAS
+from haystack import constants
 from celery_haystack.utils import Setting
 
-DEFAULT_ALIAS = Setting('CELERY_HAYSTACK_USING', DEFAULT_ALIAS)
+DEFAULT_ALIAS = Setting('CELERY_HAYSTACK_USING',
+                        getattr(constants, 'DEFAULT_ALIAS', None))
 
 RETRY_DELAY = Setting('CELERY_HAYSTACK_RETRY_DELAY', 5 * 60)
 

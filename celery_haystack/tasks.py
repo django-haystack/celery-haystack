@@ -1,19 +1,29 @@
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
 from django.db.models.loading import get_model
 
 from celery.task import Task
 
-from haystack import connections
-from haystack.exceptions import NotHandled
-
 from celery_haystack import conf
+
+try:
+    from haystack import connections
+    index_holder = connections['default'].get_unified_index()
+    from haystack.exceptions import NotHandled as IndexNotFoundException
+    legacy = False
+except ImportError:
+    try:
+        from haystack import site as index_holder
+        from haystack.exceptions import NotRegistered as IndexNotFoundException
+        legacy = True
+    except ImportError, e:
+        raise ImproperlyConfigured("Haystack couldn't be imported: %s" % e)
 
 
 class CeleryHaystackSignalHandler(Task):
-    max_retries = conf.MAX_RETRIES
-    default_retry_delay = conf.RETRY_DELAY
-    using = conf.DEFAULT_ALIAS
+    using = property(lambda self: str(conf.DEFAULT_ALIAS))
+    max_retries = property(lambda self: int(conf.MAX_RETRIES))
+    default_retry_delay = property(lambda self: int(conf.RETRY_DELAY))
 
     def split_identifier(self, identifier, **kwargs):
         """
@@ -58,11 +68,11 @@ class CeleryHaystackSignalHandler(Task):
         logger = self.get_logger(**kwargs)
         try:
             instance = model_class.objects.get(pk=int(pk))
-        except ObjectDoesNotExist:
+        except model_class.DoesNotExist:
             logger.error("Couldn't load model instance "
                          "with pk #%s. Somehow it went missing? %s" % pk)
             return None
-        except MultipleObjectsReturned:
+        except model_class.MultipleObjectsReturned:
             logger.error("More than one object with pk #%s. Oops?" % pk)
             return None
 
@@ -74,11 +84,18 @@ class CeleryHaystackSignalHandler(Task):
         """
         logger = self.get_logger(**kwargs)
         try:
-            connection = connections['default']
-            return connection.get_unified_index().get_index(model_class)
-        except NotHandled:
+            return index_holder.get_index(model_class)
+        except IndexNotFoundException:
             logger.error("Couldn't find a SearchIndex for %s." % model_class)
-            return None
+        return None
+
+    def get_handler_options(self, instance, **kwargs):
+        options = {
+            'instance': instance,
+        }
+        if legacy:
+            options['using'] = self.using
+        return options
 
     def run(self, action, identifier, **kwargs):
         """
@@ -99,6 +116,7 @@ class CeleryHaystackSignalHandler(Task):
         instance = self.get_instance(model_class, pk, **kwargs)
         if instance is None:
             logger.debug("Didn't update index for '%s'" % identifier)
+            return
 
         # Call the appropriate handler of the current index and
         # handle exception if neccessary
@@ -109,7 +127,8 @@ class CeleryHaystackSignalHandler(Task):
                 'update': current_index.update_object,
                 'delete': current_index.remove_object,
             }
-            handlers[action](instance, using=self.using)
+            handler_options = self.get_handler_options(instance, **kwargs)
+            handlers[action](**handler_options)
         except KeyError, exc:
             logger.error("Unrecognized action '%s'. Moving on..." % action)
             self.retry([action, identifier], kwargs, exc=exc)
