@@ -21,9 +21,9 @@ except ImportError:
 
 
 class CeleryHaystackSignalHandler(Task):
-    max_retries = conf.MAX_RETRIES
-    default_retry_delay = conf.RETRY_DELAY
-    using = conf.DEFAULT_ALIAS
+    using = property(lambda self: str(conf.DEFAULT_ALIAS))
+    max_retries = property(lambda self: int(conf.MAX_RETRIES))
+    default_retry_delay = property(lambda self: int(conf.RETRY_DELAY))
 
     def split_identifier(self, identifier, **kwargs):
         """
