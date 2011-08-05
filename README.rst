@@ -38,6 +38,11 @@ Setup
 Changelog
 ---------
 
+0.2.1 (2011-08-05)
+^^^^^^^^^^^^^^^^^^
+
+* Fixed typo in exception message handling.
+
 0.2 (2011-08-04)
 ^^^^^^^^^^^^^^^^
 
