@@ -23,6 +23,9 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Topic :: Utilities',
     ],
+    install_requires=[
+        'django-appconf >= 0.2.1',
+    ],
     setup_requires=[
         'versiontools >= 1.5',
     ],

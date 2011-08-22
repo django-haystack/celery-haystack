@@ -1,10 +1,9 @@
+from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
 from django.db.models.loading import get_model
 
 from celery.task import Task
-
-from celery_haystack import conf
 
 try:
     from haystack import connections
@@ -21,9 +20,9 @@ except ImportError:
 
 
 class CeleryHaystackSignalHandler(Task):
-    using = property(lambda self: str(conf.DEFAULT_ALIAS))
-    max_retries = property(lambda self: int(conf.MAX_RETRIES))
-    default_retry_delay = property(lambda self: int(conf.RETRY_DELAY))
+    using = settings.CELERY_HAYSTACK_DEFAULT_ALIAS
+    max_retries = settings.CELERY_HAYSTACK_MAX_RETRIES
+    default_retry_delay = settings.CELERY_HAYSTACK_RETRY_DELAY
 
     def split_identifier(self, identifier, **kwargs):
         """
@@ -149,15 +148,15 @@ class CeleryHaystackUpdateIndex(Task):
         logger.info("Starting update index")
         # Run the update_index management command
         defaults = {
-            'batchsize': conf.COMMAND_BATCH_SIZE,
-            'age': conf.COMMAND_AGE,
-            'remove': conf.COMMAND_REMOVE,
-            'using': conf.DEFAULT_ALIAS,
-            'workers': int(conf.COMMAND_WORKERS),
-            'verbosity': int(conf.COMMAND_VERBOSITY),
+            'batchsize': settings.CELERY_HAYSTACK_COMMAND_BATCH_SIZE,
+            'age': settings.CELERY_HAYSTACK_COMMAND_AGE,
+            'remove': settings.CELERY_HAYSTACK_COMMAND_REMOVE,
+            'using': settings.CELERY_HAYSTACK_DEFAULT_ALIAS,
+            'workers': settings.CELERY_HAYSTACK_COMMAND_WORKERS,
+            'verbosity': settings.CELERY_HAYSTACK_COMMAND_VERBOSITY,
         }
         defaults.update(kwargs)
         if apps is None:
-            apps = conf.COMMAND_APPS
+            apps = settings.CELERY_HAYSTACK_COMMAND_APPS
         call_command('update_index', *apps, **defaults)
         logger.info("Finishing update index")
