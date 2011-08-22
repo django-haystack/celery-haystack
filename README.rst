@@ -39,6 +39,11 @@ Setup
 Changelog
 ---------
 
+0.3.1 (2011-08-22)
+^^^^^^^^^^^^^^^^^^
+
+* Minor bugfix in new appconf support code.
+
 0.3 (2011-08-22)
 ^^^^^^^^^^^^^^^^
 

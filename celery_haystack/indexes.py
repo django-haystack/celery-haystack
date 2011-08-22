@@ -24,7 +24,7 @@ class CeleryHaystack(AppConf):
     def configure_default_alias(self, value):
         return value or getattr(constants, 'DEFAULT_ALIAS', None)
 
-    def configure(self, value):
+    def configure(self):
         data = {}
         for name, value in self.configured_data.items():
             if name in ('RETRY_DELAY', 'MAX_RETRIES',
