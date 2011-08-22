@@ -11,6 +11,7 @@ Requirements
 * Django 1.2+
 * Haystack_ `1.2.X`_ *or* `2.0.X`_
 * Celery_ 1.X
+* django-appconf (automatically installed)
 
 You also need to install your choice of one of the supported search engines
 for Haystack and one of the supported backends for Celery.
