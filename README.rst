@@ -38,6 +38,15 @@ Setup
 Changelog
 ---------
 
+0.3 (2011-08-22)
+^^^^^^^^^^^^^^^^
+
+* Moved configuration defaults handling to django-appconf_.
+
+* Fixed issue that occured when retrying a task.
+
+.. _django-appconf: http://pypi.python.org/pypi/django-appconf
+
 0.2.1 (2011-08-05)
 ^^^^^^^^^^^^^^^^^^
 
