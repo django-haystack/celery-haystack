@@ -9,7 +9,7 @@ Requirements
 ------------
 
 * Django 1.2+
-* Haystack_ `1.2.X`_ *or* `2.0.X`_
+* Haystack_ `1.2.X`_ *or* `2.X`_
 * Celery_ 2.X
 * django-appconf (automatically installed)
 
@@ -17,8 +17,6 @@ You also need to install your choice of one of the supported search engines
 for Haystack and one of the supported backends for Celery.
 
 .. _Haystack: http://haystacksearch.org
-.. _`1.2.X`: http://pypi.python.org/pypi/django-haystack/1.2.4
-.. _`2.0.X`: https://github.com/toastdriven/django-haystack/tree/master
 
 Installation
 ------------
@@ -33,7 +31,7 @@ Setup
 1. Add ``'celery_haystack'`` to ``INSTALLED_APPS``.
 2. Alter all of your ``SearchIndex`` subclasses to inherit from
    ``celery_haystack.indexes.CelerySearchIndex`` (as well as
-   ``haystack.indexes.Indexable``).
+   ``haystack.indexes.Indexable`` if you use Haystack `2.X`_).
 3. Ensure your Celery instance is running.
 
 Changelog
@@ -88,3 +86,5 @@ queues_ library by Matt Croyden.
 .. _queued_search: https://github.com/toastdriven/queued_search/
 .. _Celery: http://celeryproject.org/
 .. _queues: http://code.google.com/p/queues/
+.. _`1.2.X`: http://pypi.python.org/pypi/django-haystack/1.2.4
+.. _`2.X`: https://github.com/toastdriven/django-haystack/tree/master
