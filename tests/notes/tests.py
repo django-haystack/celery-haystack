@@ -6,6 +6,7 @@ from django.core.management import call_command
 from django.test import TestCase
 
 from celery import current_app
+from celery_haystack import CeleryHaystackSignalHandler
 
 from notes.models import Note
 
@@ -152,3 +153,8 @@ class QueuedSearchIndexTestCase(TestCase):
             ('update', u'notes.note.3'),
             ('delete', u'notes.note.3'),
         ])
+
+        for item in self.queue:
+            CeleryHaystackSignalHandler.run(item[0], item[1])
+
+        self.assertEqual(len(self.queue), 0)

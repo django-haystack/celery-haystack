@@ -109,8 +109,28 @@ class CeleryHaystackSignalHandler(Task):
             logger.error("Skipping.")
             return
 
+        if not action in ('update', 'delete'):
+            logger.error("Unrecognized action '%s'. Moving on..." % action)
+            self.retry([action, identifier], kwargs)
+
         # Then get the model class for the object path
         model_class = self.get_model_class(object_path, **kwargs)
+
+        if action == 'delete':
+            # If the object is gone, we'll use just the identifier against the
+            # index.
+            try:
+                current_index = self.get_index(model_class, **kwargs)
+                handler_options = self.get_handler_options(identifier, **kwargs)
+                current_index.remove_object(**handler_options)
+            except Exception, exc:
+                logger.error(exc)
+                self.retry([action, identifier], kwargs, exc=exc)
+            else:
+                logger.debug("Deleted '%s' from index" % identifier)
+
+            return
+
         # and the instance of the model class with the pk
         instance = self.get_instance(model_class, pk, **kwargs)
         if instance is None:
@@ -122,15 +142,8 @@ class CeleryHaystackSignalHandler(Task):
         logger.debug("Indexing '%s'." % instance)
         try:
             current_index = self.get_index(model_class, **kwargs)
-            handlers = {
-                'update': current_index.update_object,
-                'delete': current_index.remove_object,
-            }
             handler_options = self.get_handler_options(instance, **kwargs)
-            handlers[action](**handler_options)
-        except KeyError, exc:
-            logger.error("Unrecognized action '%s'. Moving on..." % action)
-            self.retry([action, identifier], kwargs, exc=exc)
+            current_index.update_object(**handler_options)
         except Exception, exc:
             logger.error(exc)
             self.retry([action, identifier], kwargs, exc=exc)
