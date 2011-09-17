@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.4 (2011-09-17)
+-----------------
+
+* Fixed bug which caused the deletion of an item to not happen correctly.
+  Please rebuild your Haystack indexes using the ``rebuild_index``
+  management command.
+
+* Addded initial Sphinx documentation: http://celery-haystack.rtfd.org
+
+* Revamped the tets to test the search results, not only queuing.
+
 v0.3.1 (2011-08-22)
 -------------------
 
