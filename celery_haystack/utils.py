@@ -1,9 +1,7 @@
-import sys
-
-from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.functional import SimpleLazyObject
 from django.utils.importlib import import_module
+
+from celery_haystack.conf import settings
 
 
 def get_update_task(task_path=None):

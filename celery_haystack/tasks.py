@@ -1,9 +1,9 @@
-from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
 from django.db.models.loading import get_model
 
 from celery.task import Task
+from celery_haystack.conf import settings
 
 try:
     from haystack import connections
@@ -88,10 +88,8 @@ class CeleryHaystackSignalHandler(Task):
             logger.error("Couldn't find a SearchIndex for %s." % model_class)
         return None
 
-    def get_handler_options(self, instance, **kwargs):
-        options = {
-            'instance': instance,
-        }
+    def get_handler_options(self, **kwargs):
+        options = {}
         if legacy:
             options['using'] = self.using
         return options
@@ -111,31 +109,42 @@ class CeleryHaystackSignalHandler(Task):
 
         # Then get the model class for the object path
         model_class = self.get_model_class(object_path, **kwargs)
-        # and the instance of the model class with the pk
-        instance = self.get_instance(model_class, pk, **kwargs)
-        if instance is None:
-            logger.debug("Didn't update index for '%s'" % identifier)
+        current_index = self.get_index(model_class, **kwargs)
+
+        if action == 'delete':
+            # If the object is gone, we'll use just the identifier against the
+            # index.
+            try:
+                handler_options = self.get_handler_options(**kwargs)
+                current_index.remove_object(identifier, **handler_options)
+            except Exception, exc:
+                logger.error(exc)
+                self.retry([action, identifier], kwargs, exc=exc)
+            else:
+                logger.debug("Deleted '%s' from index" % identifier)
             return
 
-        # Call the appropriate handler of the current index and
-        # handle exception if neccessary
-        logger.debug("Indexing '%s'." % instance)
-        try:
-            current_index = self.get_index(model_class, **kwargs)
-            handlers = {
-                'update': current_index.update_object,
-                'delete': current_index.remove_object,
-            }
-            handler_options = self.get_handler_options(instance, **kwargs)
-            handlers[action](**handler_options)
-        except KeyError, exc:
+        elif action == 'update':
+            # and the instance of the model class with the pk
+            instance = self.get_instance(model_class, pk, **kwargs)
+            if instance is None:
+                logger.debug("Didn't update index for '%s'" % identifier)
+                return
+
+            # Call the appropriate handler of the current index and
+            # handle exception if neccessary
+            logger.debug("Indexing '%s'." % instance)
+            try:
+                handler_options = self.get_handler_options(**kwargs)
+                current_index.update_object(instance, **handler_options)
+            except Exception, exc:
+                logger.error(exc)
+                self.retry([action, identifier], kwargs, exc=exc)
+            else:
+                logger.debug("Updated index with '%s'" % instance)
+        else:
             logger.error("Unrecognized action '%s'. Moving on..." % action)
             self.retry([action, identifier], kwargs, exc=exc)
-        except Exception, exc:
-            logger.error(exc)
-            self.retry([action, identifier], kwargs, exc=exc)
-        else:
-            logger.debug("Updated index with '%s'" % instance)
 
 
 class CeleryHaystackUpdateIndex(Task):
