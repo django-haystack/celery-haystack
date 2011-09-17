@@ -6,7 +6,7 @@ INSTALLED_APPS = [
     'haystack',
     'djcelery',
     'celery_haystack',
-    'notes',
+    'tests',
 ]
 
 DATABASES = {
@@ -24,6 +24,7 @@ HAYSTACK_CONNECTIONS = {
 }
 
 BROKER_TRANSPORT = "memory"
+CELERY_ALWAYS_EAGER = True
 CELERY_IGNORE_RESULT = True
 CELERYD_LOG_LEVEL = "DEBUG"
 CELERY_DEFAULT_QUEUE = "celery-haystack"

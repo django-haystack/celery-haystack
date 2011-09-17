@@ -1,5 +1,5 @@
 from haystack import indexes, __version__ as haystack_version
-from notes.models import Note
+from .models import Note
 
 from celery_haystack.indexes import CelerySearchIndex
 

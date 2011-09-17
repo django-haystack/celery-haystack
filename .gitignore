@@ -4,3 +4,4 @@ tests/whoosh_index
 *.egg
 *.egg-info
 .tox
+.coverage
