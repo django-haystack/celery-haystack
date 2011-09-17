@@ -11,7 +11,7 @@ setup(
     long_description=read(path.join(path.dirname(__file__), 'README.rst')),
     author='Jannis Leidel',
     author_email='jannis@leidel.info',
-    url='http://github.com/ennio/celery-haystack',
+    url='http://celery-haystack.rtfd.org/',
     packages=['celery_haystack'],
     license='BSD',
     classifiers=[
