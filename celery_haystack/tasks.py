@@ -1,9 +1,9 @@
-from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
 from django.db.models.loading import get_model
 
 from celery.task import Task
+from celery_haystack.conf import settings
 
 try:
     from haystack import connections
