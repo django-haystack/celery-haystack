@@ -1,6 +1,7 @@
 from os import path, environ
 
-TEST_ROOT = path.abspath(path.join(path.dirname(__file__), '..'))
+TEST_ROOT = path.abspath(path.join(path.dirname(__file__),
+                         os.pardir, os.pardir))
 
 INSTALLED_APPS = [
     'haystack',
@@ -16,7 +17,7 @@ DATABASES = {
     }
 }
 
-HAYSTACK_SITECONF = 'tests.search_sites'
+HAYSTACK_SITECONF = 'celery_haystack.tests.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = path.join(TEST_ROOT, 'whoosh_index')
 

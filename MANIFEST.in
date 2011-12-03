@@ -1,5 +1,4 @@
 include README.rst
 include AUTHORS
 include tox.ini
-recursive-include tests *
 recursive-include docs *
