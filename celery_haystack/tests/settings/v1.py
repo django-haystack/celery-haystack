@@ -1,7 +1,6 @@
-from os import path, environ
+from os import path, environ, pardir
 
-TEST_ROOT = path.abspath(path.join(path.dirname(__file__),
-                         os.pardir, os.pardir))
+TEST_ROOT = path.abspath(path.join(path.dirname(__file__), pardir, pardir))
 
 INSTALLED_APPS = [
     'haystack',
