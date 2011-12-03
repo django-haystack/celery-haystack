@@ -6,7 +6,7 @@ INSTALLED_APPS = [
     'haystack',
     'djcelery',
     'celery_haystack',
-    'tests',
+    'celery_haystack.tests',
 ]
 
 DATABASES = {

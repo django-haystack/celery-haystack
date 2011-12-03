@@ -12,7 +12,11 @@ setup(
     author='Jannis Leidel',
     author_email='jannis@leidel.info',
     url='http://celery-haystack.rtfd.org/',
-    packages=['celery_haystack'],
+    packages=[
+        'celery_haystack',
+        'celery_haystack.tests',
+        'celery_haystack.tests.settings',
+    ],
     license='BSD',
     classifiers=[
         "Development Status :: 4 - Beta",
