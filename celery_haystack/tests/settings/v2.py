@@ -3,7 +3,7 @@ from os import path, environ, pardir
 TEST_ROOT = path.abspath(path.join(path.dirname(__file__), pardir))
 
 INSTALLED_APPS = [
-    'django_nose',
+    'django_jenkins',
     'haystack',
     'djcelery',
     'celery_haystack',
