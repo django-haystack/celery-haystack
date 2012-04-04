@@ -66,7 +66,7 @@ class CeleryHaystackSignalHandler(Task):
         """
         logger = self.get_logger(**kwargs)
         try:
-            instance = model_class.objects.get(pk=int(pk))
+            instance = model_class.objects.get(pk=pk)
         except model_class.DoesNotExist:
             logger.error("Couldn't load model instance "
                          "with pk #%s. Somehow it went missing?" % pk)
