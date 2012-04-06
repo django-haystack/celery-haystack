@@ -6,8 +6,7 @@ from celery.task import Task
 from celery_haystack.conf import settings
 
 try:
-    from haystack import connections
-    index_holder = connections['default'].get_unified_index()
+    from haystack import connections, connection_router
     from haystack.exceptions import NotHandled as IndexNotFoundException
     legacy = False
 except ImportError:
@@ -66,10 +65,14 @@ class CeleryHaystackSignalHandler(Task):
         """
         logger = self.get_logger(**kwargs)
         try:
-            instance = model_class.objects.get(pk=int(pk))
+            instance = model_class._default_manager.get(pk=int(pk))
         except model_class.DoesNotExist:
             logger.error("Couldn't load model instance "
-                         "with pk #%s. Somehow it went missing?" % pk)
+                         "with pk #%s in %s.%s. Somehow it went missing?" % (
+                            pk,
+                            model_class._meta.app_label,
+                            model_class._meta.object_name
+                        ))
             return None
         except model_class.MultipleObjectsReturned:
             logger.error("More than one object with pk #%s. Oops?" % pk)
@@ -83,6 +86,9 @@ class CeleryHaystackSignalHandler(Task):
         """
         logger = self.get_logger(**kwargs)
         try:
+            if not legacy:
+                backend_alias = connection_router.for_write(**{'models': [model_class]})
+                index_holder = connections[backend_alias].get_unified_index()
             return index_holder.get_index(model_class)
         except IndexNotFoundException:
             logger.error("Couldn't find a SearchIndex for %s." % model_class)
@@ -122,8 +128,6 @@ class CeleryHaystackSignalHandler(Task):
                 self.retry([action, identifier], kwargs, exc=exc)
             else:
                 logger.debug("Deleted '%s' from index" % identifier)
-            return
-
         elif action == 'update':
             # and the instance of the model class with the pk
             instance = self.get_instance(model_class, pk, **kwargs)
