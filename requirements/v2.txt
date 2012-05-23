@@ -1,0 +1,7 @@
+django-discover-runner
+https://github.com/toastdriven/django-haystack/tarball/master
+django-celery
+celery
+Whoosh
+flake8
+coverage

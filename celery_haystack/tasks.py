@@ -13,7 +13,7 @@ try:
 except ImportError:
     try:
         from haystack import site as index_holder
-        from haystack.exceptions import NotRegistered as IndexNotFoundException
+        from haystack.exceptions import NotRegistered as IndexNotFoundException  # noqa
         legacy = True
     except ImportError, e:
         raise ImproperlyConfigured("Haystack couldn't be imported: %s" % e)
@@ -66,7 +66,7 @@ class CeleryHaystackSignalHandler(Task):
         """
         logger = self.get_logger(**kwargs)
         try:
-            instance = model_class.objects.get(pk=int(pk))
+            instance = model_class.objects.get(pk=pk)
         except model_class.DoesNotExist:
             logger.error("Couldn't load model instance "
                          "with pk #%s. Somehow it went missing?" % pk)

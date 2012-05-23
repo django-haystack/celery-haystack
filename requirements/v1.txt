@@ -1,0 +1,7 @@
+django-discover-runner
+django-haystack==1.2.5
+django-celery
+celery
+Whoosh
+flake8
+coverage

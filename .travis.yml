@@ -1,0 +1,24 @@
+language: python
+python:
+  - "2.6"
+  - "2.7"
+before_install:
+  - export PIP_USE_MIRRORS=true
+  - export PIP_INDEX_URL=https://simple.crate.io/
+  - export DJANGO_SETTINGS_MODULE=celery_haystack.test_settings
+install:
+  - pip install -e .
+  - pip install -r requirements/$HAYSTACK.txt Django==$DJANGO
+before_script:
+  - flake8 celery_haystack --ignore=E501
+script:
+  - coverage run --branch --source=celery_haystack --omit=celery_haystack/tests `which django-admin.py` test celery_haystack
+  - coverage report
+env:
+  - DJANGO=1.3.1 HAYSTACK=v1
+  - DJANGO=1.3.1 HAYSTACK=v2
+  - DJANGO=1.4 HAYSTACK=v1
+  - DJANGO=1.4 HAYSTACK=v2
+branches:
+  only:
+    - develop
