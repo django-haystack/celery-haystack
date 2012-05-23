@@ -62,4 +62,4 @@ Issues
 Please use the `Github issue tracker`_ for any bug reports or feature
 requests.
 
-.. _`Github issue tracker`: https://github.com/ennio/celery-haystack/issues
+.. _`Github issue tracker`: https://github.com/jezdez/celery-haystack/issues
