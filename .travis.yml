@@ -13,7 +13,7 @@ before_script:
   - flake8 celery_haystack --ignore=E501
 script:
   - coverage run --branch --source=celery_haystack `which django-admin.py` test celery_haystack
-  - coverage report --omit=celery_haystack/tests*
+  - coverage report --omit=celery_haystack/test*
 env:
   - DJANGO=1.3.1 HAYSTACK=v1
   - DJANGO=1.3.1 HAYSTACK=v2
