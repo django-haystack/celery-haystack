@@ -2,6 +2,10 @@
 celery-haystack
 ===============
 
+.. image:: https://secure.travis-ci.org/jezdez/celery-haystack.png?branch=develop
+    :alt: Build Status
+    :target: http://travis-ci.org/jezdez/celery-haystack
+
 This Django app allows you to utilize Celery for automatically updating and
 deleting objects in a Haystack_ search index.
 
