@@ -24,12 +24,12 @@ CELERY_DEFAULT_QUEUE = "celery-haystack"
 
 TEST_RUNNER = 'discover_runner.DiscoverRunner'
 
-if os.environ('HAYSTACK') == 'v1':
+if os.environ.get('HAYSTACK') == 'v1':
     HAYSTACK_SITECONF = 'celery_haystack.tests.search_sites'
     HAYSTACK_SEARCH_ENGINE = 'whoosh'
     HAYSTACK_WHOOSH_PATH = os.path.join(TEST_ROOT, 'whoosh_index')
 
-elif os.environ('HAYSTACK') == 'v2':
+elif os.environ.get('HAYSTACK') == 'v2':
     HAYSTACK_CONNECTIONS = {
         'default': {
             'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
