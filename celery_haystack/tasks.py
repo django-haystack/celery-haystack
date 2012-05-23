@@ -13,7 +13,7 @@ try:
 except ImportError:
     try:
         from haystack import site as index_holder
-        from haystack.exceptions import NotRegistered as IndexNotFoundException
+        from haystack.exceptions import NotRegistered as IndexNotFoundException  # noqa
         legacy = True
     except ImportError, e:
         raise ImproperlyConfigured("Haystack couldn't be imported: %s" % e)

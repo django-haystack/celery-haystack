@@ -5,11 +5,13 @@ from celery_haystack.indexes import CelerySearchIndex
 
 if haystack_version[:2] < (2, 0):
     from haystack import site
+
     class Indexable(object):
         pass
     indexes.Indexable = Indexable
 else:
-    site = None
+    site = None  # noqa
+
 
 # Simplest possible subclass that could work.
 class NoteIndex(CelerySearchIndex, indexes.Indexable):

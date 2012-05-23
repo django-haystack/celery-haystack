@@ -1,4 +1,4 @@
-from django.conf import settings
+from django.conf import settings  # noqa
 from haystack import constants
 from appconf import AppConf
 
