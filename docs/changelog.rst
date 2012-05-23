@@ -4,6 +4,8 @@ Changelog
 v0.5 (2012-05-23)
 -----------------
 
+* Moved repository to personal account again: http://github.com/jezdez/celery-haystack
+
 * Removed versiontools dependency again.
 
 * Moved to using Travis-CI for tests: http://travis-ci.org/jezdez/celery-haystack
