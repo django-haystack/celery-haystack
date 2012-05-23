@@ -3,6 +3,5 @@
 celery_haystack/tests/whoosh_index
 *.egg
 *.egg-info
-.tox
 .coverage
 docs/_build
