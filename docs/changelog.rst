@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.5 (2012-05-23)
+-----------------
+
+* Removed versiontools dependency again.
+
+* Moved to using Travis-CI for tests: http://travis-ci.org/ennio/celery-haystack
+
 v0.4 (2011-09-17)
 -----------------
 
