@@ -34,11 +34,7 @@ By default a few dependencies will automatically be installed:
 
 - django-appconf_ -- An app to gracefully handle application settings.
 
-- versiontools_ -- A library to help staying compatible to `PEP 386`_.
-
 .. _django-appconf: http://pypi.python.org/pypi/django-appconf
-.. _versiontools: http://pypi.python.org/pypi/versiontools
-.. _`PEP 386`: http://www.python.org/dev/peps/pep-0386/
 
 Setup
 -----
