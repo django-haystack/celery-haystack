@@ -6,8 +6,7 @@ from django.db.models.loading import get_model
 from celery_haystack.conf import settings
 
 try:
-    from haystack import connections
-    index_holder = connections['default'].get_unified_index()
+    from haystack import connections, connection_router
     from haystack.exceptions import NotHandled as IndexNotFoundException
     legacy = False
 except ImportError:
@@ -75,10 +74,11 @@ class CeleryHaystackSignalHandler(Task):
         logger = self.get_logger(**kwargs)
         instance = None
         try:
-            instance = model_class.objects.get(pk=pk)
+            instance = model_class._default_manager.get(pk=int(pk))
         except model_class.DoesNotExist:
-            logger.error("Couldn't load model instance "
-                         "with pk %s. Somehow it went missing?" % pk)
+            logger.error("Couldn't load %s.%s.%s. Somehow it went missing?" %
+                         (model_class._meta.app_label.lower(),
+                          model_class._meta.object_name.lower(), pk))
         except model_class.MultipleObjectsReturned:
             logger.error("More than one object with pk %s. Oops?" % pk)
         return instance
@@ -88,6 +88,9 @@ class CeleryHaystackSignalHandler(Task):
         Fetch the model's registered ``SearchIndex`` in a standarized way.
         """
         try:
+            if not legacy:
+                backend_alias = connection_router.for_write(**{'models': [model_class]})
+                index_holder = connections[backend_alias].get_unified_index()
             return index_holder.get_index(model_class)
         except IndexNotFoundException:
             raise ImproperlyConfigured("Couldn't find a SearchIndex for %s." %
@@ -134,7 +137,6 @@ class CeleryHaystackSignalHandler(Task):
                        (identifier, current_index_name))
                 logger.debug(msg)
                 return msg
-
         elif action == 'update':
             # and the instance of the model class with the pk
             instance = self.get_instance(model_class, pk, **kwargs)

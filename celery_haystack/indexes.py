@@ -25,19 +25,27 @@ class CelerySearchIndex(indexes.SearchIndex):
     # operation.
     def _setup_save(self, model=None):
         model = self.handle_model(model)
-        signals.post_save.connect(self.enqueue_save, sender=model)
+        signals.post_save.connect(self._enqueue_save, sender=model, dispatch_uid=CelerySearchIndex)
 
     def _setup_delete(self, model=None):
         model = self.handle_model(model)
-        signals.post_delete.connect(self.enqueue_delete, sender=model)
+        signals.post_delete.connect(self._enqueue_delete, sender=model, dispatch_uid=CelerySearchIndex)
 
     def _teardown_save(self, model=None):
         model = self.handle_model(model)
-        signals.post_save.disconnect(self.enqueue_save, sender=model)
+        signals.post_save.disconnect(self._enqueue_save, sender=model, dispatch_uid=CelerySearchIndex)
 
     def _teardown_delete(self, model=None):
         model = self.handle_model(model)
-        signals.post_delete.disconnect(self.enqueue_delete, sender=model)
+        signals.post_delete.disconnect(self._enqueue_delete, sender=model, dispatch_uid=CelerySearchIndex)
+
+    def _enqueue_save(self, instance, **kwargs):
+        if not getattr(instance, 'skip_indexing', False):
+            self.enqueue_save(instance, **kwargs)
+
+    def _enqueue_delete(self, instance, **kwargs):
+        if not getattr(instance, 'skip_indexing', False):
+            self.enqueue_delete(instance, **kwargs)
 
     def enqueue_save(self, instance, **kwargs):
         return self.enqueue('update', instance)
