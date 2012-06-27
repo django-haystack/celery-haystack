@@ -34,7 +34,13 @@ By default a few dependencies will automatically be installed:
 
 - django-appconf_ -- An app to gracefully handle application settings.
 
+- `django-celery-transactions`_ -- An app that "holds on to Celery tasks
+  until the current database transaction is committed, avoiding potential
+  race conditions as described in `Celery's user guide`_."
+
 .. _django-appconf: http://pypi.python.org/pypi/django-appconf
+.. _`django-celery-transactions`: https://github.com/chrisdoble/django-celery-transactions 
+.. _`Celery's user guide`: http://celery.readthedocs.org/en/latest/userguide/tasks.html#database-transactions
 
 Setup
 -----

@@ -1,6 +1,23 @@
 Changelog
 =========
 
+v0.6 (2012-06-27)
+-----------------
+
+* *backwards incompatible change* Added support for
+  `django-celery-transactions`_ to make sure the tasks are respecting
+  Django's transaction management. It holds on to Celery tasks
+  until the current database transaction is committed, avoiding potential
+  race conditions as described in `Celery's user guide`_.
+
+  This is **enabled by default** but can be disabled in case you want
+  to manually manage the tranasctions:
+
+      CELERY_HAYSTACK_TRANSACTION_SAFE = False
+
+.. _`django-celery-transactions`: https://github.com/chrisdoble/django-celery-transactions 
+.. _`Celery's user guide`: http://celery.readthedocs.org/en/latest/userguide/tasks.html#database-transactions
+
 v0.5 (2012-05-23)
 -----------------
 

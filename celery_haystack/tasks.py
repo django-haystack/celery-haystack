@@ -2,7 +2,6 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
 from django.db.models.loading import get_model
 
-from celery.task import Task
 from celery_haystack.conf import settings
 
 try:
@@ -17,6 +16,11 @@ except ImportError:
         legacy = True
     except ImportError, e:
         raise ImproperlyConfigured("Haystack couldn't be imported: %s" % e)
+
+if settings.CELERY_HAYSTACK_TRANSACTION_SAFE:
+    from djcelery_transactions import PostTransactionTask as Task
+else:
+    from celery.task import Task  # noqa
 
 
 class CeleryHaystackSignalHandler(Task):
@@ -112,8 +116,8 @@ class CeleryHaystackSignalHandler(Task):
         current_index = self.get_index(model_class, **kwargs)
 
         if action == 'delete':
-            # If the object is gone, we'll use just the identifier against the
-            # index.
+            # If the object is gone, we'll use just the identifier
+            # against the index.
             try:
                 handler_options = self.get_handler_options(**kwargs)
                 current_index.remove_object(identifier, **handler_options)
