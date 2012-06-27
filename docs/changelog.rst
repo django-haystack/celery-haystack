@@ -19,6 +19,9 @@ v0.6 (2012-06-27)
   happened in every step of the index interaction. Raise exception about
   misconfiguration and wrong parameters quicker.
 
+* Improved support for multiple search indexes as implemented by
+  Haystack 2.X. Many thanks to Germán M. Bravo (Kronuz).
+
 .. _`django-celery-transactions`: https://github.com/chrisdoble/django-celery-transactions 
 .. _`Celery's user guide`: http://celery.readthedocs.org/en/latest/userguide/tasks.html#database-transactions
 
