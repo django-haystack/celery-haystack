@@ -17,4 +17,4 @@ def get_update_task(task_path=None):
     except AttributeError:
         raise ImproperlyConfigured('Module "%s" does not define a "%s" '
                                    'class.' % (module, attr))
-    return Task()
+    return Task

@@ -8,6 +8,7 @@ class CeleryHaystack(AppConf):
     RETRY_DELAY = 5 * 60
     MAX_RETRIES = 1
     DEFAULT_TASK = 'celery_haystack.tasks.CeleryHaystackSignalHandler'
+    TRANSACTION_SAFE = True
 
     COMMAND_BATCH_SIZE = None
     COMMAND_AGE = None

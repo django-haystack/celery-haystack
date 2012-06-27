@@ -1,28 +1,38 @@
+import logging
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
 from django.db.models.loading import get_model
 
-from celery.task import Task
 from celery_haystack.conf import settings
 
 try:
-    from haystack import connections
-    index_holder = connections['default'].get_unified_index()
+    from haystack import connections, connection_router
     from haystack.exceptions import NotHandled as IndexNotFoundException
     legacy = False
 except ImportError:
     try:
-        from haystack import site as index_holder
+        from haystack import site
         from haystack.exceptions import NotRegistered as IndexNotFoundException  # noqa
         legacy = True
     except ImportError, e:
         raise ImproperlyConfigured("Haystack couldn't be imported: %s" % e)
+
+if settings.CELERY_HAYSTACK_TRANSACTION_SAFE and not settings.CELERY_ALWAYS_EAGER:
+    from djcelery_transactions import PostTransactionTask as Task
+else:
+    from celery.task import Task  # noqa
 
 
 class CeleryHaystackSignalHandler(Task):
     using = settings.CELERY_HAYSTACK_DEFAULT_ALIAS
     max_retries = settings.CELERY_HAYSTACK_MAX_RETRIES
     default_retry_delay = settings.CELERY_HAYSTACK_RETRY_DELAY
+
+    def get_logger(self, *args, **kwargs):
+        logger = super(CeleryHaystackSignalHandler, self).get_logger(*args, **kwargs)
+        if settings.DEBUG:
+            logger.setLogger(logging.DEBUG)
+        return logger
 
     def split_identifier(self, identifier, **kwargs):
         """
@@ -53,11 +63,8 @@ class CeleryHaystackSignalHandler(Task):
         model_class = get_model(app_name, classname)
 
         if model_class is None:
-            logger = self.get_logger(**kwargs)
-            logger.error("Could not load model "
-                         "from '%s'. Moving on..." % object_path)
-            return None
-
+            raise ImproperlyConfigured("Could not load model '%s'." %
+                                       object_path)
         return model_class
 
     def get_instance(self, model_class, pk, **kwargs):
@@ -65,27 +72,31 @@ class CeleryHaystackSignalHandler(Task):
         Fetch the instance in a standarized way.
         """
         logger = self.get_logger(**kwargs)
+        instance = None
         try:
-            instance = model_class.objects.get(pk=pk)
+            instance = model_class._default_manager.get(pk=int(pk))
         except model_class.DoesNotExist:
-            logger.error("Couldn't load model instance "
-                         "with pk #%s. Somehow it went missing?" % pk)
-            return None
+            logger.error("Couldn't load %s.%s.%s. Somehow it went missing?" %
+                         (model_class._meta.app_label.lower(),
+                          model_class._meta.object_name.lower(), pk))
         except model_class.MultipleObjectsReturned:
-            logger.error("More than one object with pk #%s. Oops?" % pk)
-            return None
-
+            logger.error("More than one object with pk %s. Oops?" % pk)
         return instance
 
     def get_index(self, model_class, **kwargs):
         """
         Fetch the model's registered ``SearchIndex`` in a standarized way.
         """
-        logger = self.get_logger(**kwargs)
         try:
+            if legacy:
+                index_holder = site
+            else:
+                backend_alias = connection_router.for_write(**{'models': [model_class]})
+                index_holder = connections[backend_alias].get_unified_index()  # noqa
             return index_holder.get_index(model_class)
         except IndexNotFoundException:
-            logger.error("Couldn't find a SearchIndex for %s." % model_class)
+            raise ImproperlyConfigured("Couldn't find a SearchIndex for %s." %
+                                       model_class)
         return None
 
     def get_handler_options(self, **kwargs):
@@ -104,47 +115,54 @@ class CeleryHaystackSignalHandler(Task):
         # First get the object path and pk (e.g. ('notes.note', 23))
         object_path, pk = self.split_identifier(identifier, **kwargs)
         if object_path is None or pk is None:
-            logger.error("Skipping.")
-            return
+            msg = "Couldn't handle object with identifier %s" % identifier
+            logger.error(msg)
+            raise ValueError(msg)
 
         # Then get the model class for the object path
         model_class = self.get_model_class(object_path, **kwargs)
         current_index = self.get_index(model_class, **kwargs)
+        current_index_name = ".".join([current_index.__class__.__module__,
+                                       current_index.__class__.__name__])
 
         if action == 'delete':
-            # If the object is gone, we'll use just the identifier against the
-            # index.
+            # If the object is gone, we'll use just the identifier
+            # against the index.
             try:
                 handler_options = self.get_handler_options(**kwargs)
                 current_index.remove_object(identifier, **handler_options)
             except Exception, exc:
                 logger.error(exc)
-                self.retry([action, identifier], kwargs, exc=exc)
+                self.retry(exc=exc)
             else:
-                logger.debug("Deleted '%s' from index" % identifier)
-            return
-
+                msg = ("Deleted '%s' (with %s)" %
+                       (identifier, current_index_name))
+                logger.debug(msg)
+                return msg
         elif action == 'update':
             # and the instance of the model class with the pk
             instance = self.get_instance(model_class, pk, **kwargs)
             if instance is None:
-                logger.debug("Didn't update index for '%s'" % identifier)
-                return
+                logger.debug("Failed updating '%s' (with %s)" %
+                             (identifier, current_index_name))
+                raise ValueError("Couldn't load object '%s'" % identifier)
 
             # Call the appropriate handler of the current index and
             # handle exception if neccessary
-            logger.debug("Indexing '%s'." % instance)
             try:
                 handler_options = self.get_handler_options(**kwargs)
                 current_index.update_object(instance, **handler_options)
             except Exception, exc:
                 logger.error(exc)
-                self.retry([action, identifier], kwargs, exc=exc)
+                self.retry(exc=exc)
             else:
-                logger.debug("Updated index with '%s'" % instance)
+                msg = ("Updated '%s' (with %s)" %
+                       (identifier, current_index_name))
+                logger.debug(msg)
+                return msg
         else:
             logger.error("Unrecognized action '%s'. Moving on..." % action)
-            self.retry([action, identifier], kwargs, exc=exc)
+            raise ValueError("Unrecognized action %s" % action)
 
 
 class CeleryHaystackUpdateIndex(Task):
@@ -152,10 +170,14 @@ class CeleryHaystackUpdateIndex(Task):
     A celery task class to be used to call the update_index management
     command from Celery.
     """
+    def get_logger(self, *args, **kwargs):
+        logger = super(CeleryHaystackUpdateIndex, self).get_logger(*args, **kwargs)
+        if settings.DEBUG:
+            logger.setLogger(logging.DEBUG)
+        return logger
+
     def run(self, apps=None, **kwargs):
         logger = self.get_logger(**kwargs)
-        logger.info("Starting update index")
-        # Run the update_index management command
         defaults = {
             'batchsize': settings.CELERY_HAYSTACK_COMMAND_BATCH_SIZE,
             'age': settings.CELERY_HAYSTACK_COMMAND_AGE,
@@ -167,5 +189,7 @@ class CeleryHaystackUpdateIndex(Task):
         defaults.update(kwargs)
         if apps is None:
             apps = settings.CELERY_HAYSTACK_COMMAND_APPS
+        # Run the update_index management command
+        logger.info("Starting update index")
         call_command('update_index', *apps, **defaults)
         logger.info("Finishing update index")

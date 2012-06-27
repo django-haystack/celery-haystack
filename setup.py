@@ -39,7 +39,8 @@ setup(
         'Topic :: Utilities',
     ],
     install_requires=[
-        'django-appconf >= 0.4.1',
+        'django-appconf>=0.4.1',
+        'django-celery-transactions>=0.1.2'
     ],
     zip_safe=False,
 )

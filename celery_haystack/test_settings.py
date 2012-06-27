@@ -1,5 +1,7 @@
 import os
 
+DEBUG = True
+
 TEST_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), 'tests'))
 
 INSTALLED_APPS = [
