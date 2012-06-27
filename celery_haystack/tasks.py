@@ -1,3 +1,4 @@
+import logging
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
 from django.db.models.loading import get_model
@@ -27,6 +28,12 @@ class CeleryHaystackSignalHandler(Task):
     using = settings.CELERY_HAYSTACK_DEFAULT_ALIAS
     max_retries = settings.CELERY_HAYSTACK_MAX_RETRIES
     default_retry_delay = settings.CELERY_HAYSTACK_RETRY_DELAY
+
+    def get_logger(self, *args, **kwargs):
+        logger = super(CeleryHaystackSignalHandler, self).get_logger(*args, **kwargs)
+        if settings.DEBUG:
+            logger.setLogger(logging.DEBUG)
+        return logger
 
     def split_identifier(self, identifier, **kwargs):
         """
@@ -157,6 +164,12 @@ class CeleryHaystackUpdateIndex(Task):
     A celery task class to be used to call the update_index management
     command from Celery.
     """
+    def get_logger(self, *args, **kwargs):
+        logger = super(CeleryHaystackUpdateIndex, self).get_logger(*args, **kwargs)
+        if settings.DEBUG:
+            logger.setLogger(logging.DEBUG)
+        return logger
+
     def run(self, apps=None, **kwargs):
         logger = self.get_logger(**kwargs)
         defaults = {
