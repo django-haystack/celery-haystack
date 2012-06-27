@@ -1,22 +1,28 @@
 Changelog
 =========
 
+v0.6.1 (2012-06-27)
+-------------------
+
+* Fixed logging setup.
+
 v0.6 (2012-06-27)
 -----------------
 
-* *backwards incompatible change* Added support for
-  `django-celery-transactions`_ to make sure the tasks are respecting
-  Django's transaction management. It holds on to Celery tasks
+* **backwards incompatible change**
+
+  Added support for `django-celery-transactions`_ to make sure the tasks
+  are respecting Django's transaction management. It holds on to Celery tasks
   until the current database transaction is committed, avoiding potential
   race conditions as described in `Celery's user guide`_.
 
   This is **enabled by default** but can be disabled in case you want
-  to manually manage the tranasctions:
+  to manually manage the transactions::
 
       CELERY_HAYSTACK_TRANSACTION_SAFE = False
 
 * Refactored the error handling to always return a message about what
-  happened in every step of the index interaction. Raise exception about
+  happened in every step of the index interaction. Raises exception about
   misconfiguration and wrong parameters quicker.
 
 * Improved support for multiple search indexes as implemented by
