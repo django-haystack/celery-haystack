@@ -117,6 +117,8 @@ class CeleryHaystackSignalHandler(Task):
         # Then get the model class for the object path
         model_class = self.get_model_class(object_path, **kwargs)
         current_index = self.get_index(model_class, **kwargs)
+        current_index_name = ".".join([current_index.__class__.__module__,
+                                       current_index.__class__.__name__])
 
         if action == 'delete':
             # If the object is gone, we'll use just the identifier
@@ -128,8 +130,8 @@ class CeleryHaystackSignalHandler(Task):
                 logger.error(exc)
                 self.retry(exc=exc)
             else:
-                msg = ("Deleted '%s' from index %s" %
-                       (identifier, current_index))
+                msg = ("Deleted '%s' (with %s)" %
+                       (identifier, current_index_name))
                 logger.debug(msg)
                 return msg
 
@@ -137,8 +139,8 @@ class CeleryHaystackSignalHandler(Task):
             # and the instance of the model class with the pk
             instance = self.get_instance(model_class, pk, **kwargs)
             if instance is None:
-                logger.debug("Didn't update index %s for '%s'" %
-                             (current_index, identifier))
+                logger.debug("Failed updating '%s' (with %s)" %
+                             (identifier, current_index_name))
                 raise ValueError("Couldn't load object '%s'" % identifier)
 
             # Call the appropriate handler of the current index and
@@ -150,8 +152,8 @@ class CeleryHaystackSignalHandler(Task):
                 logger.error(exc)
                 self.retry(exc=exc)
             else:
-                msg = ("Updated index %s with '%s'" %
-                       (current_index, instance))
+                msg = ("Updated '%s' (with %s)" %
+                       (identifier, current_index_name))
                 logger.debug(msg)
                 return msg
         else:
