@@ -11,7 +11,7 @@ try:
     legacy = False
 except ImportError:
     try:
-        from haystack import site as index_holder  # noqa
+        from haystack import site
         from haystack.exceptions import NotRegistered as IndexNotFoundException  # noqa
         legacy = True
     except ImportError, e:
@@ -88,7 +88,9 @@ class CeleryHaystackSignalHandler(Task):
         Fetch the model's registered ``SearchIndex`` in a standarized way.
         """
         try:
-            if not legacy:
+            if legacy:
+                index_holder = site
+            else:
                 backend_alias = connection_router.for_write(**{'models': [model_class]})
                 index_holder = connections[backend_alias].get_unified_index()  # noqa
             return index_holder.get_index(model_class)
