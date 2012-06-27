@@ -18,7 +18,7 @@ except ImportError:
     except ImportError, e:
         raise ImproperlyConfigured("Haystack couldn't be imported: %s" % e)
 
-if settings.CELERY_HAYSTACK_TRANSACTION_SAFE:
+if settings.CELERY_HAYSTACK_TRANSACTION_SAFE and not settings.CELERY_ALWAYS_EAGER:
     from djcelery_transactions import PostTransactionTask as Task
 else:
     from celery.task import Task  # noqa
