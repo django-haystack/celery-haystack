@@ -90,7 +90,7 @@ class CeleryHaystackSignalHandler(Task):
         try:
             if not legacy:
                 backend_alias = connection_router.for_write(**{'models': [model_class]})
-                index_holder = connections[backend_alias].get_unified_index()
+                index_holder = connections[backend_alias].get_unified_index()  # noqa
             return index_holder.get_index(model_class)
         except IndexNotFoundException:
             raise ImproperlyConfigured("Couldn't find a SearchIndex for %s." %
