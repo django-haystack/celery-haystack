@@ -159,8 +159,6 @@ class CeleryHaystackUpdateIndex(Task):
     """
     def run(self, apps=None, **kwargs):
         logger = self.get_logger(**kwargs)
-        logger.info("Starting update index")
-        # Run the update_index management command
         defaults = {
             'batchsize': settings.CELERY_HAYSTACK_COMMAND_BATCH_SIZE,
             'age': settings.CELERY_HAYSTACK_COMMAND_AGE,
@@ -172,5 +170,7 @@ class CeleryHaystackUpdateIndex(Task):
         defaults.update(kwargs)
         if apps is None:
             apps = settings.CELERY_HAYSTACK_COMMAND_APPS
+        # Run the update_index management command
+        logger.info("Starting update index")
         call_command('update_index', *apps, **defaults)
         logger.info("Finishing update index")
