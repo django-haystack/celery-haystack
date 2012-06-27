@@ -11,7 +11,7 @@ try:
     legacy = False
 except ImportError:
     try:
-        from haystack import site as index_holder
+        from haystack import site as index_holder  # noqa
         from haystack.exceptions import NotRegistered as IndexNotFoundException  # noqa
         legacy = True
     except ImportError, e:
