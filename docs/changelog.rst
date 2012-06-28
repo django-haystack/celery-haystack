@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.6.2 (2012-06-28)
+-------------------
+
+* Fixed AttributeError in settings handling.
+
 v0.6.1 (2012-06-27)
 -------------------
 
