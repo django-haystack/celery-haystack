@@ -125,7 +125,7 @@ class CeleryHaystackSignalHandler(Task):
                 handler_options = self.get_handler_options(**kwargs)
                 current_index.remove_object(identifier, **handler_options)
             except Exception, exc:
-                logger.error(exc)
+                logger.exception(exc)
                 self.retry(exc=exc)
             else:
                 msg = ("Deleted '%s' (with %s)" %
@@ -146,7 +146,7 @@ class CeleryHaystackSignalHandler(Task):
                 handler_options = self.get_handler_options(**kwargs)
                 current_index.update_object(instance, **handler_options)
             except Exception, exc:
-                logger.error(exc)
+                logger.exception(exc)
                 self.retry(exc=exc)
             else:
                 msg = ("Updated '%s' (with %s)" %
