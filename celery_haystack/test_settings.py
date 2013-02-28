@@ -18,6 +18,8 @@ DATABASES = {
     }
 }
 
+SECRET_KEY = 'really-not-secret'
+
 BROKER_TRANSPORT = "memory"
 CELERY_ALWAYS_EAGER = True
 CELERY_IGNORE_RESULT = True
@@ -38,3 +40,5 @@ elif os.environ.get('HAYSTACK') == 'v2':
             'PATH': os.path.join(TEST_ROOT, 'whoosh_index'),
         }
     }
+    HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
+    CELERY_HAYSTACK_MODELS = ['celery_haystack.tests.Note']
