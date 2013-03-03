@@ -9,7 +9,6 @@ class CeleryHaystack(AppConf):
     MAX_RETRIES = 1
     DEFAULT_TASK = 'celery_haystack.tasks.CeleryHaystackSignalHandler'
     TRANSACTION_SAFE = True
-    MODELS = []
 
     COMMAND_BATCH_SIZE = None
     COMMAND_AGE = None

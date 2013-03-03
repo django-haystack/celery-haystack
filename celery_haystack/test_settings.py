@@ -41,4 +41,3 @@ elif os.environ.get('HAYSTACK') == 'v2':
         }
     }
     HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
-    CELERY_HAYSTACK_MODELS = ['celery_haystack.tests.Note']

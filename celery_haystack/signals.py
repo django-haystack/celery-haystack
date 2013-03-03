@@ -1,48 +1,43 @@
 from django.conf import settings
-from django.db.models import get_model, signals
 
-from haystack.signals import BaseSignalProcessor
+from haystack.signals import RealtimeSignalProcessor
 from haystack.utils import get_identifier
+from haystack.exceptions import NotHandled
 
 from celery_haystack.utils import get_update_task
+from celery_haystack.indexes import CelerySearchIndex
 
 
-class CelerySignalProcessor(BaseSignalProcessor):
+class CelerySignalProcessor(RealtimeSignalProcessor):
     def __init__(self, *args, **kwargs):
         super(CelerySignalProcessor, self).__init__(*args, **kwargs)
         self.task_cls = get_update_task()
 
-    def get_models(self):
-        for app_model in settings.CELERY_HAYSTACK_MODELS:
-            yield get_model(*app_model.rsplit('.', 1))
-
-    def setup(self):
-        for model in self.get_models():
-            signals.post_save.connect(self.handle_save, sender=model)
-            signals.post_delete.connect(self.handle_delete, sender=model)
-
-    def teardown(self):
-        for model in self.get_models():
-            signals.post_save.disconnect(self.handle_save, sender=model)
-            signals.post_delete.disconnect(self.handle_delete, sender=model)
-
     def handle_save(self, sender, instance, **kwargs):
-        """
-        Enqueue instance for update
-        """
-        self.enqueue_save(instance, **kwargs)
+        return self.handle(sender, instance, action='update', **kwargs)
 
     def handle_delete(self, sender, instance, **kwargs):
-        """
-        Enqueue instance for deleting
-        """
-        self.enqueue_delete(instance, **kwargs)
+        return self.handle(sender, instance, action='delete', **kwargs)
 
-    def enqueue_save(self, instance, **kwargs):
-        return self.enqueue('update', instance)
+    def handle(self, sender, instance, action='update', **kwargs):
+        """
+        Given an individual model instance, determine if a backend
+        handles the model, check if the index is Celery-enabled and
+        enqueue task.
+        """
 
-    def enqueue_delete(self, instance, **kwargs):
-        return self.enqueue('delete', instance)
+        using_backends = self.connection_router.for_write(instance=instance)
+
+        for using in using_backends:
+            try:
+                index = (self.connections[using].get_unified_index()
+                         .get_index(sender))
+            except NotHandled:
+                pass  # Check next backend
+            else:
+                if isinstance(index, CelerySearchIndex):
+                    self.enqueue(action, instance)
+                    return  # Only enqueue instance once
 
     def enqueue(self, action, instance):
         """
