@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.7.1 (2013-03-09)
+-------------------
+
+* Fixed an installation issues with d2to1.
+
 v0.7 (2013-03-09)
 -----------------
 
