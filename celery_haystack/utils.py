@@ -1,7 +1,7 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.importlib import import_module
 
-from celery_haystack.conf import settings
+from .conf import settings
 
 
 def get_update_task(task_path=None):

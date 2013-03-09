@@ -1,7 +1,7 @@
 from haystack import indexes, __version__ as haystack_version
-from .models import Note
 
-from celery_haystack.indexes import CelerySearchIndex
+from .models import Note
+from ..indexes import CelerySearchIndex
 
 if haystack_version[:2] < (2, 0):
     from haystack import site
