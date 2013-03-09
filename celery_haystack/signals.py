@@ -33,11 +33,13 @@ class CelerySignalProcessor(RealtimeSignalProcessor):
                 index = (self.connections[using].get_unified_index()
                          .get_index(sender))
             except NotHandled:
-                pass  # Check next backend
-            else:
-                if isinstance(index, CelerySearchIndex):
-                    self.enqueue(action, instance)
-                    return  # Only enqueue instance once
+                continue  # Check next backend
+
+            if isinstance(index, CelerySearchIndex):
+                if action == 'update' and not index.should_update(instance):
+                    continue
+                self.enqueue(action, instance)
+                return  # Only enqueue instance once
 
     def enqueue(self, action, instance):
         """
