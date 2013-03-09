@@ -1,5 +1,3 @@
-from django.conf import settings
-
 from haystack.signals import RealtimeSignalProcessor
 from haystack.utils import get_identifier
 from haystack.exceptions import NotHandled
