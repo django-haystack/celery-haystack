@@ -42,14 +42,72 @@ By default a few dependencies will automatically be installed:
 .. _`django-celery-transactions`: https://github.com/chrisdoble/django-celery-transactions 
 .. _`Celery's user guide`: http://celery.readthedocs.org/en/latest/userguide/tasks.html#database-transactions
 
-Setup
+Usage
 -----
 
-1. Add ``'celery_haystack'`` to ``INSTALLED_APPS``.
+Haystack 1.X
+~~~~~~~~~~~~
+
+1. Add ``'celery_haystack'`` to the ``INSTALLED_APPS`` setting
+
+   ::
+
+     INSTALLED_APPS = [
+         # ..
+         'celery_haystack',
+     ]
+
 2. Alter all of your ``SearchIndex`` subclasses to inherit from
-   ``celery_haystack.indexes.CelerySearchIndex`` (as well as
-   ``haystack.indexes.Indexable`` if you use Haystack `2.X`_).
+   ``celery_haystack.indexes.CelerySearchIndex``
+
+   ::
+
+     from haystack import site
+     from celery_haystack.indexes import CelerySearchIndex
+     from myapp.models import Note
+
+     class NoteIndex(CelerySearchIndex):
+         text = indexes.CharField(document=True, model_attr='content')
+
+     site.register(Note, NoteIndex)
+
 3. Ensure your Celery instance is running.
+
+Haystack 2.X
+~~~~~~~~~~~~
+
+1. Add ``'celery_haystack'`` to the ``INSTALLED_APPS`` setting
+
+   ::
+
+     INSTALLED_APPS = [
+         # ..
+         'celery_haystack',
+     ]
+
+2. Enable the celery-haystack signal processor in the settings
+
+   ::
+
+    HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
+
+3. Alter all of your ``SearchIndex`` subclasses to inherit from
+   ``celery_haystack.indexes.CelerySearchIndex`` and
+   ``haystack.indexes.Indexable``
+
+   ::
+
+     from haystack import indexes
+     from celery_haystack.indexes import CelerySearchIndex
+     from myapp.models import Note
+
+     class NoteIndex(CelerySearchIndex, indexes.Indexable):
+         text = indexes.CharField(document=True, model_attr='content')
+
+         def get_model(self):
+             return Note
+
+4. Ensure your Celery instance is running.
 
 Thanks
 ------
