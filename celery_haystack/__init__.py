@@ -1,1 +1,5 @@
-__version__ = '0.6.2'
+__version__ = '0.7'
+
+
+def version_hook(config):
+    config['metadata']['version'] = __version__
