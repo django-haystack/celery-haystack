@@ -1,6 +1,27 @@
 Changelog
 =========
 
+v0.7 (2013-03-09)
+-----------------
+
+* **Backwards incompatible** change to support the new signal processor API
+  in Haystack 2.X. To upgrade simply add this to your settings::
+
+    HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
+
+  Many thanks to Stefan Wehrmeyer for the help.
+
+* Simplified index class implementation.
+
+* Support multiple indexes in the task. Thanks, Stefan Wehrmeyer.
+
+* Use the exception handler of the task logger instead of the error handler
+  when catching an exception.
+
+* Switched to d2to1_ for handling package metadata.
+
+.. _d2to1: http://pypi.python.org/pypi/d2to1
+
 v0.6.2 (2012-06-28)
 -------------------
 
