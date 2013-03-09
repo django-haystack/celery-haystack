@@ -2,7 +2,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
 from django.db.models.loading import get_model
 
-from celery_haystack.conf import settings
+from .conf import settings
 
 try:
     from haystack import connections, connection_router
