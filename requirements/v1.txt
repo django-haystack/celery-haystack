@@ -1,5 +1,5 @@
 django-discover-runner
-django-haystack==1.2.5
+django-haystack==1.2.7
 django-celery
 celery
 Whoosh
