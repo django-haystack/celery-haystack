@@ -17,6 +17,8 @@ env:
   - DJANGO=1.3.7 HAYSTACK=v2
   - DJANGO=1.4.5 HAYSTACK=v1
   - DJANGO=1.4.5 HAYSTACK=v2
+  - DJANGO=1.5 HAYSTACK=v1
+  - DJANGO=1.5 HAYSTACK=v2
 branches:
   only:
     - develop
