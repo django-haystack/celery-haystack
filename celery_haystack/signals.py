@@ -11,7 +11,6 @@ from .indexes import CelerySearchIndex
 class CelerySignalProcessor(BaseSignalProcessor):
 
     def setup(self):
-        self.task_cls = get_update_task()
         signals.post_save.connect(self.enqueue_save)
         signals.post_delete.connect(self.enqueue_delete)
 
@@ -26,6 +25,9 @@ class CelerySignalProcessor(BaseSignalProcessor):
         return self.enqueue('delete', instance, sender, **kwargs)
 
     def enqueue(self, action, instance, sender, **kwargs):
+        if not hasattr(self, 'task_tls'):
+            self.task_cls = get_update_task()
+
         """
         Given an individual model instance, determine if a backend
         handles the model, check if the index is Celery-enabled and
