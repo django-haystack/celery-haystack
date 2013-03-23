@@ -62,7 +62,7 @@ Haystack 1.X
 
    ::
 
-     from haystack import site
+     from haystack import site, indexes
      from celery_haystack.indexes import CelerySearchIndex
      from myapp.models import Note
 

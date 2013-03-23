@@ -41,11 +41,12 @@ class CeleryHaystack(AppConf):
             data[name] = value
         return data
 
-if (haystack_version[0] >= 2 and
-    getattr(settings, 'HAYSTACK_SIGNAL_PROCESSOR', None) !=
-        'celery_haystack.signals.CelerySignalProcessor'):
 
+signal_processor = getattr(settings, 'HAYSTACK_SIGNAL_PROCESSOR', None)
+
+
+if haystack_version[0] >= 2 and signal_processor is None:
     raise ImproperlyConfigured("When using celery-haystack with Haystack 2.X "
                                "the HAYSTACK_SIGNAL_PROCESSOR setting must be "
-                               "set to 'celery_haystack.signals."
-                               "CelerySignalProcessor'.")
+                               "set. Use 'celery_haystack.signals."
+                               "CelerySignalProcessor' as default.")

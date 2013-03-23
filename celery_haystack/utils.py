@@ -1,6 +1,8 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.importlib import import_module
 
+from haystack.utils import get_identifier
+
 from .conf import settings
 
 
@@ -18,3 +20,12 @@ def get_update_task(task_path=None):
         raise ImproperlyConfigured('Module "%s" does not define a "%s" '
                                    'class.' % (module, attr))
     return Task
+
+
+def enqueue_task(action, instance):
+    """
+    Common utility for enqueing a task for the given action and
+    model instance.
+    """
+    identifier = get_identifier(instance)
+    get_update_task().delay(action, identifier)
