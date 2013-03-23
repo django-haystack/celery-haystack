@@ -1,17 +1,15 @@
 from django.db.models import signals
 
 from haystack.signals import BaseSignalProcessor
-from haystack.utils import get_identifier
 from haystack.exceptions import NotHandled
 
-from .utils import get_update_task
+from .utils import enqueue_task
 from .indexes import CelerySearchIndex
 
 
 class CelerySignalProcessor(BaseSignalProcessor):
 
     def setup(self):
-        self.task_cls = get_update_task()
         signals.post_save.connect(self.enqueue_save)
         signals.post_delete.connect(self.enqueue_delete)
 
@@ -43,5 +41,5 @@ class CelerySignalProcessor(BaseSignalProcessor):
             if isinstance(index, CelerySearchIndex):
                 if action == 'update' and not index.should_update(instance):
                     continue
-                self.task_cls.delay(action, get_identifier(instance))
+                enqueue_task(action, instance)
                 return  # Only enqueue instance once

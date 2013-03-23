@@ -1,9 +1,8 @@
 from django.db.models import signals
 
 from haystack import indexes
-from haystack.utils import get_identifier
 
-from .utils import get_update_task
+from .utils import enqueue_task
 
 
 class CelerySearchIndex(indexes.SearchIndex):
@@ -11,10 +10,6 @@ class CelerySearchIndex(indexes.SearchIndex):
     A ``SearchIndex`` subclass that enqueues updates/deletes for later
     processing using Celery.
     """
-    def __init__(self, *args, **kwargs):
-        super(CelerySearchIndex, self).__init__(*args, **kwargs)
-        self.task_cls = get_update_task()
-
     # We override the built-in _setup_* methods to connect the enqueuing
     # operation.
     def _setup_save(self, model):
@@ -55,4 +50,4 @@ class CelerySearchIndex(indexes.SearchIndex):
             # ...or...
             ``weblog.entry.8``
         """
-        return self.task_cls.delay(action, get_identifier(instance))
+        return enqueue_task(action, instance)
