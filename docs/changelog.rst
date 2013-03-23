@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v0.7.2 (2013-03-23)
+-------------------
+
+* Fixed import time issue with Haystack 2.X.
+
+* Minor fixes to the README.
+
+* Made signal processor compatible for subclassing for easier extensibility.
+
 v0.7.1 (2013-03-09)
 -------------------
 
