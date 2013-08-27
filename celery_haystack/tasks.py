@@ -13,7 +13,7 @@ except ImportError:
         from haystack import site
         from haystack.exceptions import NotRegistered as IndexNotFoundException  # noqa
         legacy = True
-    except ImportError, e:
+    except ImportError as e:
         raise ImproperlyConfigured("Haystack couldn't be imported: %s" % e)
 
 if settings.CELERY_HAYSTACK_TRANSACTION_SAFE and not getattr(settings, 'CELERY_ALWAYS_EAGER', False):
@@ -125,7 +125,7 @@ class CeleryHaystackSignalHandler(Task):
                 try:
                     handler_options = self.get_handler_options(**kwargs)
                     current_index.remove_object(identifier, **handler_options)
-                except Exception, exc:
+                except Exception as exc:
                     logger.exception(exc)
                     self.retry(exc=exc)
                 else:
@@ -146,7 +146,7 @@ class CeleryHaystackSignalHandler(Task):
                 try:
                     handler_options = self.get_handler_options(**kwargs)
                     current_index.update_object(instance, **handler_options)
-                except Exception, exc:
+                except Exception as exc:
                     logger.exception(exc)
                     self.retry(exc=exc)
                 else:
