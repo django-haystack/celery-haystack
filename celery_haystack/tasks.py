@@ -132,7 +132,6 @@ class CeleryHaystackSignalHandler(Task):
                     msg = ("Deleted '%s' (with %s)" %
                            (identifier, current_index_name))
                     logger.debug(msg)
-                    return msg
             elif action == 'update':
                 # and the instance of the model class with the pk
                 instance = self.get_instance(model_class, pk, **kwargs)
@@ -153,7 +152,6 @@ class CeleryHaystackSignalHandler(Task):
                     msg = ("Updated '%s' (with %s)" %
                            (identifier, current_index_name))
                     logger.debug(msg)
-                    return msg
             else:
                 logger.error("Unrecognized action '%s'. Moving on..." % action)
                 raise ValueError("Unrecognized action %s" % action)
