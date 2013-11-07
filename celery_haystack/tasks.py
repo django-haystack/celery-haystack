@@ -83,21 +83,15 @@ class CeleryHaystackSignalHandler(Task):
         try:
             if legacy:
                 index_holder = site
-                yield index_holder.get_index(model_class)
+                yield index_holder.get_index(model_class), self.using
             else:
                 using_backends = connection_router.for_write(**{'models': [model_class]})
                 for using in using_backends:
                     index_holder = connections[using].get_unified_index()
-                    yield index_holder.get_index(model_class)
+                    yield index_holder.get_index(model_class), using
         except IndexNotFoundException:
             raise ImproperlyConfigured("Couldn't find a SearchIndex for %s." %
                                        model_class)
-
-    def get_handler_options(self, **kwargs):
-        options = {}
-        if legacy:
-            options['using'] = self.using
-        return options
 
     def run(self, action, identifier, **kwargs):
         """
@@ -115,7 +109,7 @@ class CeleryHaystackSignalHandler(Task):
 
         # Then get the model class for the object path
         model_class = self.get_model_class(object_path, **kwargs)
-        for current_index in self.get_indexes(model_class, **kwargs):
+        for current_index, using in self.get_indexes(model_class, **kwargs):
             current_index_name = ".".join([current_index.__class__.__module__,
                                            current_index.__class__.__name__])
 
@@ -123,8 +117,7 @@ class CeleryHaystackSignalHandler(Task):
                 # If the object is gone, we'll use just the identifier
                 # against the index.
                 try:
-                    handler_options = self.get_handler_options(**kwargs)
-                    current_index.remove_object(identifier, **handler_options)
+                    current_index.remove_object(identifier, using=using)
                 except Exception as exc:
                     logger.exception(exc)
                     self.retry(exc=exc)
@@ -143,8 +136,7 @@ class CeleryHaystackSignalHandler(Task):
                 # Call the appropriate handler of the current index and
                 # handle exception if neccessary
                 try:
-                    handler_options = self.get_handler_options(**kwargs)
-                    current_index.update_object(instance, **handler_options)
+                    current_index.update_object(instance, using=using)
                 except Exception as exc:
                     logger.exception(exc)
                     self.retry(exc=exc)
