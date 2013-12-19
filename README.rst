@@ -19,6 +19,8 @@ Requirements
 You also need to install your choice of one of the supported search engines
 for Haystack and one of the supported backends for Celery.
 
+Celery>=3.1.x is **not** supported for the time being. Pull requests are welcome.
+
 .. _Haystack: http://haystacksearch.org
 .. _`1.2.X`: http://pypi.python.org/pypi/django-haystack/1.2.5
 .. _`2.X`: https://github.com/toastdriven/django-haystack/tree/master
