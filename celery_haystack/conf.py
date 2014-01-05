@@ -1,6 +1,7 @@
 from django.conf import settings  # noqa
 from django.core.exceptions import ImproperlyConfigured
 from haystack import constants, __version__ as haystack_version
+from haystack.management.commands import update_index as cmd
 from appconf import AppConf
 
 
@@ -31,6 +32,12 @@ class CeleryHaystack(AppConf):
 
     def configure_default_alias(self, value):
         return value or getattr(constants, 'DEFAULT_ALIAS', None)
+
+    def configure_command_batch_size(self, value):
+        return value or getattr(cmd, 'DEFAULT_BATCH_SIZE', None)
+
+    def configure_command_age(self, value):
+        return value or getattr(cmd, 'DEFAULT_AGE', None)
 
     def configure(self):
         data = {}
