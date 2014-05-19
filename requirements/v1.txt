@@ -1,5 +1,5 @@
 django-discover-runner
-django-haystack==1.2.7
+django-haystack==1.2.7    # rq.filter: <2.0.0
 django-celery
 celery
 Whoosh
