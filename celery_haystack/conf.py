@@ -7,6 +7,8 @@ from appconf import AppConf
 class CeleryHaystack(AppConf):
     #: The default alias to
     DEFAULT_ALIAS = None
+    #: The delay (in seconds) before task will be executed (Celery countdown)
+    COUNTDOWN = 0
     #: The delay (in seconds) after which a failed index is retried
     RETRY_DELAY = 5 * 60
     #: The number of retries that are done

@@ -31,4 +31,6 @@ def enqueue_task(action, instance):
     kwargs = {}
     if settings.CELERY_HAYSTACK_QUEUE:
         kwargs['queue'] = settings.CELERY_HAYSTACK_QUEUE
-    get_update_task().apply_async([action, identifier], {}, **kwargs)
+    if settings.CELERY_HAYSTACK_COUNTDOWN:
+        kwargs['countdown'] = settings.CELERY_HAYSTACK_COUNTDOWN
+    get_update_task().apply_async((action, identifier), {}, **kwargs)
