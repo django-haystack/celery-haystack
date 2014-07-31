@@ -2,20 +2,50 @@ language: python
 python:
   - "2.6"
   - "2.7"
+  - "3.3"
+  - "3.4"
 before_install:
   - export DJANGO_SETTINGS_MODULE=celery_haystack.test_settings
 install:
   - pip install -e .
-  - pip install -r requirements/$HAYSTACK.txt Django==$DJANGO
+  - pip install -r requirements/$HAYSTACK.txt $DJANGO
 before_script:
   - flake8 celery_haystack --ignore=E501
 script:
   - coverage run --branch --source=celery_haystack `which django-admin.py` test celery_haystack
   - coverage report --omit=celery_haystack/test*
 env:
-  - DJANGO=1.3.7 HAYSTACK=v1
-  - DJANGO=1.3.7 HAYSTACK=v2
-  - DJANGO=1.4.5 HAYSTACK=v1
-  - DJANGO=1.4.5 HAYSTACK=v2
-  - DJANGO=1.5 HAYSTACK=v1
-  - DJANGO=1.5 HAYSTACK=v2
+  - DJANGO="Django==1.4.13" HAYSTACK=v1
+  - DJANGO="Django==1.4.13" HAYSTACK=v2
+  - DJANGO="Django==1.5.8" HAYSTACK=v1
+  - DJANGO="Django==1.5.8" HAYSTACK=v2
+  - DJANGO="Django==1.6.5" HAYSTACK=v1
+  - DJANGO="Django==1.6.5" HAYSTACK=v2
+  - DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v1
+  - DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v2
+matrix:
+  exclude:
+  - env: DJANGO="Django==1.4.13" HAYSTACK=v1
+    python: "3.3"
+  - env: DJANGO="Django==1.4.13" HAYSTACK=v2
+    python: "3.3"
+  - env: DJANGO="Django==1.5.8" HAYSTACK=v1
+    python: "3.3"
+  - env: DJANGO="Django==1.6.5" HAYSTACK=v1
+    python: "3.3"
+  - env: DJANGO="Django==1.4.13" HAYSTACK=v1
+    python: "3.4"
+  - env: DJANGO="Django==1.4.13" HAYSTACK=v2
+    python: "3.4"
+  - env: DJANGO="Django==1.5.8" HAYSTACK=v1
+    python: "3.4"
+  - env: DJANGO="Django==1.6.5" HAYSTACK=v1
+    python: "3.4"
+  - env: DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v1
+    python: "2.6"
+  - env: DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v2
+    python: "2.6"
+  - env: DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v1
+    python: "3.3"
+  - env: DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v1
+    python: "3.4"

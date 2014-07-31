@@ -1,5 +1,13 @@
 import os
 
+import django
+
+from celery import Celery
+
+app = Celery('celery_haystack')
+app.config_from_object('django.conf:settings')
+
+
 DEBUG = True
 
 TEST_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), 'tests'))
@@ -26,7 +34,8 @@ CELERY_IGNORE_RESULT = True
 CELERYD_LOG_LEVEL = "DEBUG"
 CELERY_DEFAULT_QUEUE = "celery-haystack"
 
-TEST_RUNNER = 'discover_runner.DiscoverRunner'
+if django.VERSION < (1, 6):
+    TEST_RUNNER = 'discover_runner.DiscoverRunner'
 
 if os.environ.get('HAYSTACK') == 'v1':
     HAYSTACK_SITECONF = 'celery_haystack.tests.search_sites'

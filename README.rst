@@ -12,12 +12,13 @@ deleting objects in a Haystack_ search index.
 Requirements
 ------------
 
-* Django 1.2+
+* Django 1.4+
 * Haystack_ `1.2.X`_ *or* `2.X`_
-* Celery_ 2.X
+* Celery_ 3.X
 
 You also need to install your choice of one of the supported search engines
 for Haystack and one of the supported backends for Celery.
+
 
 .. _Haystack: http://haystacksearch.org
 .. _`1.2.X`: http://pypi.python.org/pypi/django-haystack/1.2.5

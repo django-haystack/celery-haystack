@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v0.8 (2014-07-31)
+-------------------
+
+* Fix bug when using multiple Haystack indizes
+
+* Fixed merge bug where primary key of object was cast to int
+
+* Add compatibility for Python 3.3, 3.4, Celery 3.X
+
 v0.7.2 (2013-03-23)
 -------------------
 
