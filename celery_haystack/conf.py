@@ -13,6 +13,8 @@ class CeleryHaystack(AppConf):
     MAX_RETRIES = 1
     #: The default Celery task class
     DEFAULT_TASK = 'celery_haystack.tasks.CeleryHaystackSignalHandler'
+    #: The name of the celery queue to use, or None for default
+    QUEUE = None
     #: Whether the task should be handled transaction safe
     TRANSACTION_SAFE = True
 
