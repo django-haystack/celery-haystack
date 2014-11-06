@@ -1,5 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.importlib import import_module
+from django.db import connection
 
 from haystack.utils import get_identifier
 
@@ -33,4 +34,7 @@ def enqueue_task(action, instance):
         kwargs['queue'] = settings.CELERY_HAYSTACK_QUEUE
     if settings.CELERY_HAYSTACK_COUNTDOWN:
         kwargs['countdown'] = settings.CELERY_HAYSTACK_COUNTDOWN
-    get_update_task().apply_async((action, identifier), {}, **kwargs)
+    if hasattr(connection, 'on_commit'):
+        connection.on_commit(lambda:get_update_task().apply_async((action, identifier), {}, **kwargs))
+    else:
+        get_update_task().apply_async((action, identifier), {}, **kwargs)
