@@ -34,7 +34,10 @@ def enqueue_task(action, instance):
         kwargs['queue'] = settings.CELERY_HAYSTACK_QUEUE
     if settings.CELERY_HAYSTACK_COUNTDOWN:
         kwargs['countdown'] = settings.CELERY_HAYSTACK_COUNTDOWN
+    task = get_update_task()
     if hasattr(connection, 'on_commit'):
-        connection.on_commit(lambda:get_update_task().apply_async((action, identifier), {}, **kwargs))
+        connection.on_commit(
+            lambda: task.apply_async((action, identifier), {}, **kwargs)
+        )
     else:
-        get_update_task().apply_async((action, identifier), {}, **kwargs)
+        task.apply_async((action, identifier), {}, **kwargs)
