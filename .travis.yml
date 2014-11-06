@@ -15,37 +15,37 @@ script:
   - coverage run --branch --source=celery_haystack `which django-admin.py` test celery_haystack
   - coverage report --omit=celery_haystack/test*
 env:
-  - DJANGO="Django==1.4.13" HAYSTACK=v1
-  - DJANGO="Django==1.4.13" HAYSTACK=v2
-  - DJANGO="Django==1.5.8" HAYSTACK=v1
-  - DJANGO="Django==1.5.8" HAYSTACK=v2
-  - DJANGO="Django==1.6.5" HAYSTACK=v1
-  - DJANGO="Django==1.6.5" HAYSTACK=v2
-  - DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v1
-  - DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v2
+  - DJANGO="Django==1.4.16" HAYSTACK=v1
+  - DJANGO="Django==1.4.16" HAYSTACK=v2
+  - DJANGO="Django==1.5.11" HAYSTACK=v1
+  - DJANGO="Django==1.5.11" HAYSTACK=v2
+  - DJANGO="Django==1.6.8" HAYSTACK=v1
+  - DJANGO="Django==1.6.8" HAYSTACK=v2
+  - DJANGO="Django==1.7.1" HAYSTACK=v1
+  - DJANGO="Django==1.7.1" HAYSTACK=v2
 matrix:
   exclude:
-  - env: DJANGO="Django==1.4.13" HAYSTACK=v1
+  - env: DJANGO="Django==1.4.16" HAYSTACK=v1
     python: "3.3"
-  - env: DJANGO="Django==1.4.13" HAYSTACK=v2
+  - env: DJANGO="Django==1.4.16" HAYSTACK=v2
     python: "3.3"
-  - env: DJANGO="Django==1.5.8" HAYSTACK=v1
+  - env: DJANGO="Django==1.5.11" HAYSTACK=v1
     python: "3.3"
-  - env: DJANGO="Django==1.6.5" HAYSTACK=v1
+  - env: DJANGO="Django==1.6.8" HAYSTACK=v1
     python: "3.3"
-  - env: DJANGO="Django==1.4.13" HAYSTACK=v1
+  - env: DJANGO="Django==1.4.16" HAYSTACK=v1
     python: "3.4"
-  - env: DJANGO="Django==1.4.13" HAYSTACK=v2
+  - env: DJANGO="Django==1.4.16" HAYSTACK=v2
     python: "3.4"
-  - env: DJANGO="Django==1.5.8" HAYSTACK=v1
+  - env: DJANGO="Django==1.5.11" HAYSTACK=v1
     python: "3.4"
-  - env: DJANGO="Django==1.6.5" HAYSTACK=v1
+  - env: DJANGO="Django==1.6.8" HAYSTACK=v1
     python: "3.4"
-  - env: DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v1
+  - env: DJANGO="Django==1.7.1" HAYSTACK=v1
     python: "2.6"
-  - env: DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v2
+  - env: DJANGO="Django==1.7.1" HAYSTACK=v2
     python: "2.6"
-  - env: DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v1
+  - env: DJANGO="Django==1.7.1" HAYSTACK=v1
     python: "3.3"
-  - env: DJANGO="https://www.djangoproject.com/download/1.7c2/tarball/" HAYSTACK=v1
+  - env: DJANGO="Django==1.7.1" HAYSTACK=v1
     python: "3.4"
