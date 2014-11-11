@@ -21,6 +21,10 @@ if settings.CELERY_HAYSTACK_TRANSACTION_SAFE and not getattr(settings, 'CELERY_A
 else:
     from celery.task import Task  # noqa
 
+from celery.utils.log import get_task_logger
+
+logger = get_task_logger(__name__) 
+
 
 class CeleryHaystackSignalHandler(Task):
     using = settings.CELERY_HAYSTACK_DEFAULT_ALIAS
@@ -36,7 +40,6 @@ class CeleryHaystackSignalHandler(Task):
         bits = identifier.split('.')
 
         if len(bits) < 2:
-            logger = self.get_logger(**kwargs)
             logger.error("Unable to parse object "
                          "identifer '%s'. Moving on..." % identifier)
             return (None, None)
@@ -64,7 +67,6 @@ class CeleryHaystackSignalHandler(Task):
         """
         Fetch the instance in a standarized way.
         """
-        logger = self.get_logger(**kwargs)
         instance = None
         try:
             instance = model_class._default_manager.get(pk=pk)
@@ -98,8 +100,6 @@ class CeleryHaystackSignalHandler(Task):
         Trigger the actual index handler depending on the
         given action ('update' or 'delete').
         """
-        logger = self.get_logger(**kwargs)
-
         # First get the object path and pk (e.g. ('notes.note', 23))
         object_path, pk = self.split_identifier(identifier, **kwargs)
         if object_path is None or pk is None:
@@ -155,7 +155,6 @@ class CeleryHaystackUpdateIndex(Task):
     command from Celery.
     """
     def run(self, apps=None, **kwargs):
-        logger = self.get_logger(**kwargs)
         defaults = {
             'batchsize': settings.CELERY_HAYSTACK_COMMAND_BATCH_SIZE,
             'age': settings.CELERY_HAYSTACK_COMMAND_AGE,
