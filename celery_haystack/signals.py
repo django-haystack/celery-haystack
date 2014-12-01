@@ -42,4 +42,3 @@ class CelerySignalProcessor(BaseSignalProcessor):
                 if action == 'update' and not index.should_update(instance):
                     continue
                 enqueue_task(action, instance)
-                return  # Only enqueue instance once
