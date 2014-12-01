@@ -159,7 +159,7 @@ class CeleryHaystackUpdateIndex(Task):
             'batchsize': settings.CELERY_HAYSTACK_COMMAND_BATCH_SIZE,
             'age': settings.CELERY_HAYSTACK_COMMAND_AGE,
             'remove': settings.CELERY_HAYSTACK_COMMAND_REMOVE,
-            'using': settings.CELERY_HAYSTACK_DEFAULT_ALIAS,
+            'using': [settings.CELERY_HAYSTACK_DEFAULT_ALIAS],
             'workers': settings.CELERY_HAYSTACK_COMMAND_WORKERS,
             'verbosity': settings.CELERY_HAYSTACK_COMMAND_VERBOSITY,
         }
