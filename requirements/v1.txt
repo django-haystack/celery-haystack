@@ -1,7 +1,7 @@
 django-discover-runner
-django-haystack==1.2.7    # rq.filter: <2.0.0
+django-haystack==1.2.7
 django-celery
 celery
-Whoosh
+whoosh<2.5
 flake8
 coverage
