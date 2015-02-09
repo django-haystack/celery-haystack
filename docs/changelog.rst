@@ -4,6 +4,8 @@ Changelog
 v0.9 (unreleased)
 -----------------
 
+* Moved to Haystack GitHub org: https://github.com/django-haystack/celery-haystack
+
 * Fix handling the default Haystack backend alias, making it a list.
 
 * Added ``CELERY_HAYSTACK_QUEUE`` setting to define which Celery queue to use.
