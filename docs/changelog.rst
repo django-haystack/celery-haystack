@@ -1,8 +1,28 @@
 Changelog
 =========
 
+v0.9 (unreleased)
+-----------------
+
+* Fix handling the default Haystack backend alias, making it a list.
+
+* Added ``CELERY_HAYSTACK_QUEUE`` setting to define which Celery queue to use.
+
+* Added ``CELERY_HAYSTACK_COUNTDOWN`` setting to define when to start the
+  indexing task after initially creating it.
+
+* Stop returning after after enqueing in the Haystack router to support
+  multple routers.
+
+* Optionally support using django-transaction-hooks for improved transaction
+  handling.
+
+* Instantiate update task class correctly.
+
+* Use Celery's task logger utility function.
+
 v0.8 (2014-07-31)
--------------------
+-----------------
 
 * Fix bug when using multiple Haystack indizes
 
