@@ -1,18 +1,23 @@
 from django.conf import settings  # noqa
 from django.core.exceptions import ImproperlyConfigured
 from haystack import constants, __version__ as haystack_version
+from haystack.management.commands import update_index as cmd
 from appconf import AppConf
 
 
 class CeleryHaystack(AppConf):
     #: The default alias to
     DEFAULT_ALIAS = None
+    #: The delay (in seconds) before task will be executed (Celery countdown)
+    COUNTDOWN = 0
     #: The delay (in seconds) after which a failed index is retried
     RETRY_DELAY = 5 * 60
     #: The number of retries that are done
     MAX_RETRIES = 1
     #: The default Celery task class
     DEFAULT_TASK = 'celery_haystack.tasks.CeleryHaystackSignalHandler'
+    #: The name of the celery queue to use, or None for default
+    QUEUE = None
     #: Whether the task should be handled transaction safe
     TRANSACTION_SAFE = True
 
@@ -31,6 +36,12 @@ class CeleryHaystack(AppConf):
 
     def configure_default_alias(self, value):
         return value or getattr(constants, 'DEFAULT_ALIAS', None)
+
+    def configure_command_batch_size(self, value):
+        return value or getattr(cmd, 'DEFAULT_BATCH_SIZE', None)
+
+    def configure_command_age(self, value):
+        return value or getattr(cmd, 'DEFAULT_AGE', None)
 
     def configure(self):
         data = {}

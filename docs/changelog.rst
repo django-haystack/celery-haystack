@@ -1,8 +1,30 @@
 Changelog
 =========
 
+v0.9 (2015-06-13)
+-----------------
+
+* Moved to Haystack GitHub org: https://github.com/django-haystack/celery-haystack
+
+* Fix handling the default Haystack backend alias, making it a list.
+
+* Added ``CELERY_HAYSTACK_QUEUE`` setting to define which Celery queue to use.
+
+* Added ``CELERY_HAYSTACK_COUNTDOWN`` setting to define when to start the
+  indexing task after initially creating it.
+
+* Stop returning after after enqueing in the Haystack router to support
+  multple routers.
+
+* Optionally support using django-transaction-hooks for improved transaction
+  handling.
+
+* Instantiate update task class correctly.
+
+* Use Celery's task logger utility function.
+
 v0.8 (2014-07-31)
--------------------
+-----------------
 
 * Fix bug when using multiple Haystack indizes
 
@@ -77,7 +99,7 @@ v0.6 (2012-06-27)
 * Improved support for multiple search indexes as implemented by
   Haystack 2.X. Many thanks to Germán M. Bravo (Kronuz).
 
-.. _`django-celery-transactions`: https://github.com/chrisdoble/django-celery-transactions 
+.. _`django-celery-transactions`: https://github.com/chrisdoble/django-celery-transactions
 .. _`Celery's user guide`: http://celery.readthedocs.org/en/latest/userguide/tasks.html#database-transactions
 
 v0.5 (2012-05-23)

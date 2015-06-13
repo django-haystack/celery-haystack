@@ -2,9 +2,9 @@
 celery-haystack
 ===============
 
-.. image:: https://secure.travis-ci.org/jezdez/celery-haystack.png?branch=develop
+.. image:: https://secure.travis-ci.org/django-haystack/celery-haystack.png?branch=develop
     :alt: Build Status
-    :target: http://travis-ci.org/jezdez/celery-haystack
+    :target: http://travis-ci.org/django-haystack/celery-haystack
 
 This Django app allows you to utilize Celery for automatically updating and
 deleting objects in a Haystack_ search index.
@@ -40,7 +40,7 @@ By default a few dependencies will automatically be installed:
   race conditions as described in `Celery's user guide`_."
 
 .. _django-appconf: http://pypi.python.org/pypi/django-appconf
-.. _`django-celery-transactions`: https://github.com/chrisdoble/django-celery-transactions 
+.. _`django-celery-transactions`: https://github.com/chrisdoble/django-celery-transactions
 .. _`Celery's user guide`: http://celery.readthedocs.org/en/latest/userguide/tasks.html#database-transactions
 
 Usage
@@ -51,7 +51,7 @@ Haystack 1.X
 
 1. Add ``'celery_haystack'`` to the ``INSTALLED_APPS`` setting
 
-   ::
+   .. code:: python
 
      INSTALLED_APPS = [
          # ..
@@ -61,7 +61,7 @@ Haystack 1.X
 2. Alter all of your ``SearchIndex`` subclasses to inherit from
    ``celery_haystack.indexes.CelerySearchIndex``
 
-   ::
+   .. code:: python
 
      from haystack import site, indexes
      from celery_haystack.indexes import CelerySearchIndex
@@ -79,7 +79,7 @@ Haystack 2.X
 
 1. Add ``'celery_haystack'`` to the ``INSTALLED_APPS`` setting
 
-   ::
+   .. code:: python
 
      INSTALLED_APPS = [
          # ..
@@ -88,7 +88,7 @@ Haystack 2.X
 
 2. Enable the celery-haystack signal processor in the settings
 
-   ::
+   .. code:: python
 
     HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
 
@@ -96,7 +96,7 @@ Haystack 2.X
    ``celery_haystack.indexes.CelerySearchIndex`` and
    ``haystack.indexes.Indexable``
 
-   ::
+   .. code:: python
 
      from haystack import indexes
      from celery_haystack.indexes import CelerySearchIndex
@@ -127,4 +127,4 @@ Issues
 Please use the `Github issue tracker`_ for any bug reports or feature
 requests.
 
-.. _`Github issue tracker`: https://github.com/jezdez/celery-haystack/issues
+.. _`Github issue tracker`: https://github.com/django-haystack/celery-haystack/issues
