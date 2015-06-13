@@ -51,7 +51,7 @@ Haystack 1.X
 
 1. Add ``'celery_haystack'`` to the ``INSTALLED_APPS`` setting
 
-   ::
+   .. code:: python
 
      INSTALLED_APPS = [
          # ..
@@ -61,7 +61,7 @@ Haystack 1.X
 2. Alter all of your ``SearchIndex`` subclasses to inherit from
    ``celery_haystack.indexes.CelerySearchIndex``
 
-   ::
+   .. code:: python
 
      from haystack import site, indexes
      from celery_haystack.indexes import CelerySearchIndex
@@ -79,7 +79,7 @@ Haystack 2.X
 
 1. Add ``'celery_haystack'`` to the ``INSTALLED_APPS`` setting
 
-   ::
+   .. code:: python
 
      INSTALLED_APPS = [
          # ..
@@ -88,7 +88,7 @@ Haystack 2.X
 
 2. Enable the celery-haystack signal processor in the settings
 
-   ::
+   .. code:: python
 
     HAYSTACK_SIGNAL_PROCESSOR = 'celery_haystack.signals.CelerySignalProcessor'
 
@@ -96,7 +96,7 @@ Haystack 2.X
    ``celery_haystack.indexes.CelerySearchIndex`` and
    ``haystack.indexes.Indexable``
 
-   ::
+   .. code:: python
 
      from haystack import indexes
      from celery_haystack.indexes import CelerySearchIndex
