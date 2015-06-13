@@ -5,3 +5,7 @@ celery_haystack/tests/whoosh_index
 *.egg-info
 .coverage
 docs/_build
+build/
+dist/
+.eggs/
+MANIFEST

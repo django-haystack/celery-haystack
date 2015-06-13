@@ -40,7 +40,7 @@ By default a few dependencies will automatically be installed:
   race conditions as described in `Celery's user guide`_."
 
 .. _django-appconf: http://pypi.python.org/pypi/django-appconf
-.. _`django-celery-transactions`: https://github.com/chrisdoble/django-celery-transactions 
+.. _`django-celery-transactions`: https://github.com/chrisdoble/django-celery-transactions
 .. _`Celery's user guide`: http://celery.readthedocs.org/en/latest/userguide/tasks.html#database-transactions
 
 Usage
