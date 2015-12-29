@@ -1,5 +1,8 @@
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.importlib import import_module
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module
 from django.db import connection
 
 from haystack.utils import get_identifier
