@@ -1,12 +1,12 @@
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TransactionTestCase
 
 from haystack.query import SearchQuerySet
 
 from .models import Note
 
 
-class QueuedSearchIndexTestCase(TestCase):
+class QueuedSearchIndexTestCase(TransactionTestCase):
 
     def assertSearchResultLength(self, count):
         self.assertEqual(count, len(SearchQuerySet()))
