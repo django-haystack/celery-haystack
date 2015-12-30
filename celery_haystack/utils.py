@@ -47,7 +47,7 @@ def enqueue_task(action, instance):
             task_func
         )
     elif hasattr(connection, 'on_commit'):
-        # Django-transaction-hook
+        # Django-transaction-hooks
         connection.on_commit(
             task_func
         )
