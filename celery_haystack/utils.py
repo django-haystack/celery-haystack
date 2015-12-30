@@ -3,7 +3,7 @@ try:
     from importlib import import_module
 except ImportError:
     from django.utils.importlib import import_module
-from django.db import connection
+from django.db import connection, transaction
 
 from haystack.utils import get_identifier
 
@@ -38,9 +38,18 @@ def enqueue_task(action, instance):
     if settings.CELERY_HAYSTACK_COUNTDOWN:
         kwargs['countdown'] = settings.CELERY_HAYSTACK_COUNTDOWN
     task = get_update_task()
-    if hasattr(connection, 'on_commit'):
+
+    task_func = lambda: task.apply_async((action, identifier), {}, **kwargs)
+
+    if hasattr(transaction, 'on_commit'):
+        # Django 1.9 on_commit hook
+        transaction.on_commit(
+            task_func
+        )
+    elif hasattr(connection, 'on_commit'):
+        # Django-transaction-hook
         connection.on_commit(
-            lambda: task.apply_async((action, identifier), {}, **kwargs)
+            task_func
         )
     else:
-        task.apply_async((action, identifier), {}, **kwargs)
+        task_func()
