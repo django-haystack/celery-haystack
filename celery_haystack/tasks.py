@@ -1,30 +1,14 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
-try:
-    from django.apps import apps
-    get_model = apps.get_model
-except ImportError:
-    from django.db.models.loading import get_model
+from django.apps import apps
+get_model = apps.get_model
 
 from .conf import settings
 
-try:
-    from haystack import connections, connection_router
-    from haystack.exceptions import NotHandled as IndexNotFoundException
-    legacy = False
-except ImportError:
-    try:
-        from haystack import site
-        from haystack.exceptions import NotRegistered as IndexNotFoundException  # noqa
-        legacy = True
-    except ImportError as e:
-        raise ImproperlyConfigured("Haystack couldn't be imported: %s" % e)
+from haystack import connections, connection_router
+from haystack.exceptions import NotHandled as IndexNotFoundException
 
-if settings.CELERY_HAYSTACK_TRANSACTION_SAFE and not getattr(settings, 'CELERY_ALWAYS_EAGER', False):
-    from djcelery_transactions import PostTransactionTask as Task
-else:
-    from celery.task import Task  # noqa
-
+from celery.task import Task  # noqa
 from celery.utils.log import get_task_logger
 
 logger = get_task_logger(__name__)
@@ -87,14 +71,10 @@ class CeleryHaystackSignalHandler(Task):
         Fetch the model's registered ``SearchIndex`` in a standarized way.
         """
         try:
-            if legacy:
-                index_holder = site
-                yield index_holder.get_index(model_class), self.using
-            else:
-                using_backends = connection_router.for_write(**{'models': [model_class]})
-                for using in using_backends:
-                    index_holder = connections[using].get_unified_index()
-                    yield index_holder.get_index(model_class), using
+            using_backends = connection_router.for_write(**{'models': [model_class]})
+            for using in using_backends:
+                index_holder = connections[using].get_unified_index()
+                yield index_holder.get_index(model_class), using
         except IndexNotFoundException:
             raise ImproperlyConfigured("Couldn't find a SearchIndex for %s." %
                                        model_class)

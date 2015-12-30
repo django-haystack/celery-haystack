@@ -1,16 +1,7 @@
-from haystack import indexes, __version__ as haystack_version
+from haystack import indexes
 
 from .models import Note
 from ..indexes import CelerySearchIndex
-
-if haystack_version[:2] < (2, 0):
-    from haystack import site
-
-    class Indexable(object):
-        pass
-    indexes.Indexable = Indexable
-else:
-    site = None  # noqa
 
 
 # Simplest possible subclass that could work.
@@ -19,6 +10,3 @@ class NoteIndex(CelerySearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Note
-
-if site:
-    site.register(Note, NoteIndex)

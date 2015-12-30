@@ -1,6 +1,6 @@
 from django.conf import settings  # noqa
 from django.core.exceptions import ImproperlyConfigured
-from haystack import constants, __version__ as haystack_version
+from haystack import constants
 from haystack.management.commands import update_index as cmd
 from appconf import AppConf
 
@@ -56,7 +56,7 @@ class CeleryHaystack(AppConf):
 signal_processor = getattr(settings, 'HAYSTACK_SIGNAL_PROCESSOR', None)
 
 
-if haystack_version[0] >= 2 and signal_processor is None:
+if signal_processor is None:
     raise ImproperlyConfigured("When using celery-haystack with Haystack 2.X "
                                "the HAYSTACK_SIGNAL_PROCESSOR setting must be "
                                "set. Use 'celery_haystack.signals."

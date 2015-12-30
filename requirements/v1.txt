@@ -1,6 +1,0 @@
-django-haystack==1.2.7
-django-celery
-celery
-whoosh<2.5
-flake8
-coverage
