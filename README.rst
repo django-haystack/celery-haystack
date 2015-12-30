@@ -21,6 +21,8 @@ for Haystack and one of the supported backends for Celery.
 
 
 .. _Haystack: http://haystacksearch.org
+.. _Celery: http://www.celeryproject.org
+
 
 Installation
 ------------
@@ -30,11 +32,10 @@ Use your favorite Python package manager to install the app from PyPI, e.g.::
     pip install celery-haystack
 
 
-For Django < 1.9 you need to install `django-transaction-hooks`_ -- an app that
+For Django < 1.9 you need to install and configure `django-transaction-hooks`_ -- an app that
 brings transaction commit hooks to Django.
 
-.. _django-appconf: http://pypi.python.org/pypi/django-appconf
-.. _`django-transaction-hooks`: https://github.com/carljm/django-transaction-hooks
+.. _django-transaction-hooks: https://github.com/carljm/django-transaction-hooks
 
 
 Usage
