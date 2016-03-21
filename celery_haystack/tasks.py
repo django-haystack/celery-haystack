@@ -5,7 +5,7 @@ from django.apps import apps
 from haystack import connections, connection_router
 from haystack.exceptions import NotHandled as IndexNotFoundException
 
-from celery.task import Task  # noqa
+from celery import Task
 from celery.utils.log import get_task_logger
 
 from .conf import settings
