@@ -1,9 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
 from django.apps import apps
-get_model = apps.get_model
-
-from .conf import settings
 
 from haystack import connections, connection_router
 from haystack.exceptions import NotHandled as IndexNotFoundException
@@ -11,7 +8,11 @@ from haystack.exceptions import NotHandled as IndexNotFoundException
 from celery.task import Task  # noqa
 from celery.utils.log import get_task_logger
 
+from .conf import settings
+
 logger = get_task_logger(__name__)
+
+get_model = apps.get_model
 
 
 class CeleryHaystackSignalHandler(Task):
