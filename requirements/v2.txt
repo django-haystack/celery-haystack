@@ -1,5 +1,4 @@
 django-haystack
-django-celery
 celery
 Whoosh
 flake8
