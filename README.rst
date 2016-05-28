@@ -23,8 +23,13 @@ Requirements
 * Celery_ 3.X_
 
 You also need to install your choice of one of the supported search engines
-for Haystack and one of the supported backends for Celery.
+for Haystack and one of the supported backends for Celery:
 
+* https://django-haystack.readthedocs.io/en/latest/backend_support.html#backend-support-matrix
+* https://django-haystack.readthedocs.io/en/latest/installing_search_engines.html
+* https://django-haystack.readthedocs.io/en/latest/settings.html
+* http://docs.celeryproject.org/en/latest/getting-started/brokers/#broker-overview
+* http://docs.celeryproject.org/en/latest/configuration.html
 
 .. _Django: https://www.djangoproject.com/
 .. _1.8+: https://github.com/django/django
