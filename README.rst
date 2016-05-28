@@ -6,13 +6,14 @@ celery-haystack
     :alt: Build Status
     :target: http://travis-ci.org/django-haystack/celery-haystack
 
-| Src: https://github.com/django-haystack/celery-haystack
-| PyPI: https://pypi.python.org/pypi/celery-haystack
-| Docs: https://celery-haystack.readthedocs.io/en/latest/
 
 This Django app allows you to utilize Celery for automatically updating and
 deleting objects in a Haystack_ search index.
 
+
+| Src: https://github.com/django-haystack/celery-haystack
+| Docs: https://celery-haystack.readthedocs.io/en/latest/
+| PyPI: https://pypi.python.org/pypi/celery-haystack
 
 Requirements
 ------------
