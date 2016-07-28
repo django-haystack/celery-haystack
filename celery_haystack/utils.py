@@ -7,7 +7,7 @@ from django.db import connection, transaction
 
 from haystack.utils import get_identifier
 
-from celery_haystack.conf import settings
+from .conf import settings
 
 
 def get_update_task(task_path=None):
