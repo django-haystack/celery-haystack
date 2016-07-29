@@ -1,4 +1,4 @@
-from .conf import  # this populates our settings
+from .conf import CeleryHaystack # this populates our settings
 from django.apps import apps as django_apps
 
 
