@@ -1,6 +1,6 @@
 from .conf import CeleryHaystack # this populates our settings
-from django.apps import apps as django_apps
+from django.apps import AppConfig
 
 
-class CeleryHaystackAppConfig(django_apps.AppConfig):
+class CeleryHaystackAppConfig(AppConfig):
     name = "celery_haystack"
