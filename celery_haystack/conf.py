@@ -25,7 +25,7 @@ class CeleryHaystack(AppConf):
     COMMAND_BATCH_SIZE = None
     #: The max age of items used by the CeleryHaystackUpdateIndex task
     COMMAND_AGE = None
-    #: Wehther to remove items from the index that aren't in the DB anymore
+    #: Whether to remove items from the index that aren't in the DB anymore
     COMMAND_REMOVE = False
     #: The number of multiprocessing workers used by the CeleryHaystackUpdateIndex task
     COMMAND_WORKERS = 0
