@@ -1,6 +1,5 @@
 django-discover-runner
 django-haystack
-django-celery
 celery
 Whoosh
 flake8
