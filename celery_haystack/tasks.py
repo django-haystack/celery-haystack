@@ -1,7 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
 from django.apps import apps
-get_model = apps.get_model
 
 from .conf import settings
 
@@ -44,7 +43,7 @@ class CeleryHaystackSignalHandler(Task):
         bits = object_path.split('.')
         app_name = '.'.join(bits[:-1])
         classname = bits[-1]
-        model_class = get_model(app_name, classname)
+        model_class = apps.get_model(app_name, classname)
 
         if model_class is None:
             raise ImproperlyConfigured("Could not load model '%s'." %
