@@ -1,6 +1,4 @@
 django-discover-runner
-django-haystack
-celery
 Whoosh
 flake8
 coverage
