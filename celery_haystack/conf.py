@@ -15,7 +15,9 @@ class CeleryHaystack(AppConf):
     #: The number of retries that are done
     MAX_RETRIES = 1
     #: The default Celery task class
-    DEFAULT_TASK = 'celery_haystack.tasks.CeleryHaystackSignalHandler'
+    DEFAULT_TASK = 'celery_haystack.tasks.haystack_signal_handler'
+    #: The update handler class
+    HANDLER = 'celery_haystack.handler.CeleryHaystackSignalHandler'
     #: The name of the celery queue to use, or None for default
     QUEUE = None
     #: Whether the task should be handled transaction safe

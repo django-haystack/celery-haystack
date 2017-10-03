@@ -10,20 +10,24 @@ from haystack.utils import get_identifier
 from .conf import settings
 
 
-def get_update_task(task_path=None):
-    import_path = task_path or settings.CELERY_HAYSTACK_DEFAULT_TASK
-    module, attr = import_path.rsplit('.', 1)
+def get_class(import_path):
+    module_name, attr = import_path.rsplit('.', 1)
     try:
-        mod = import_module(module)
+        mod = import_module(module_name)
     except ImportError as e:
         raise ImproperlyConfigured('Error importing module %s: "%s"' %
-                                   (module, e))
+                                   (module_name, e))
     try:
-        Task = getattr(mod, attr)
+        update_task = getattr(mod, attr)
     except AttributeError:
         raise ImproperlyConfigured('Module "%s" does not define a "%s" '
-                                   'class.' % (module, attr))
-    return Task()
+                                   'class.' % (module_name, attr))
+    return update_task
+
+
+def get_update_task(task_path=None):
+    import_path = task_path or settings.CELERY_HAYSTACK_DEFAULT_TASK
+    return get_class(import_path)
 
 
 def enqueue_task(action, instance, **kwargs):
@@ -53,3 +57,7 @@ def enqueue_task(action, instance, **kwargs):
         )
     else:
         task_func()
+
+
+def get_handler():
+    return get_class(settings.CELERY_HAYSTACK_HANDLER)
