@@ -8,7 +8,7 @@ before_install:
   - export DJANGO_SETTINGS_MODULE=celery_haystack.test_settings
 install:
   - pip install -e .
-  - pip install -r $DJANGO $CELERY requirements/v2.txt
+  - pip install -r requirements/v2.txt $DJANGO $CELERY
 before_script:
   - flake8 celery_haystack --ignore=E501,E731
 script:
