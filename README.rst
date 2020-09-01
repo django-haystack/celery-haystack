@@ -14,7 +14,7 @@ Requirements
 
 * Django 1.8+
 * Haystack_ `2.X`_
-* Celery_ 3.X
+* Celery_ 3.X / 4.X
 
 You also need to install your choice of one of the supported search engines
 for Haystack and one of the supported backends for Celery.
