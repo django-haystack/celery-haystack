@@ -1,8 +1,8 @@
+from appconf import AppConf
 from django.conf import settings  # noqa
 from django.core.exceptions import ImproperlyConfigured
 from haystack import constants
 from haystack.management.commands import update_index as cmd
-from appconf import AppConf
 
 
 class CeleryHaystack(AppConf):

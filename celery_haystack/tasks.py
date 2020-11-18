@@ -1,14 +1,12 @@
-from django.core.exceptions import ImproperlyConfigured
-from django.core.management import call_command
-from django.apps import apps
-
-from .conf import settings
-
-from haystack import connections, connection_router
-from haystack.exceptions import NotHandled as IndexNotFoundException
-
 from celery.task import Task  # noqa
 from celery.utils.log import get_task_logger
+from django.apps import apps
+from django.core.exceptions import ImproperlyConfigured
+from django.core.management import call_command
+from haystack import connection_router, connections
+from haystack.exceptions import NotHandled as IndexNotFoundException
+
+from .conf import settings
 
 logger = get_task_logger(__name__)
 
