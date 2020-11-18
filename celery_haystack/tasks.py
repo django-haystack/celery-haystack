@@ -3,7 +3,8 @@ from celery.utils.log import get_task_logger
 from django.apps import apps
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
-from haystack import connection_router, connections
+from haystack import connection_router
+from haystack import connections
 from haystack.exceptions import NotHandled as IndexNotFoundException
 
 from .conf import settings
