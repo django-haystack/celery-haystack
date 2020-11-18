@@ -20,6 +20,8 @@ class CeleryHaystack(AppConf):
     QUEUE = None
     #: Whether the task should be handled transaction safe
     TRANSACTION_SAFE = True
+    #: Whether the task results should be ignored
+    IGNORE_RESULT = False
 
     #: The batch size used by the CeleryHaystackUpdateIndex task
     COMMAND_BATCH_SIZE = None
