@@ -49,10 +49,10 @@ class CeleryHaystack(AppConf):
         data = {}
         for name, value in self.configured_data.items():
             if name in (
-                "RETRY_DELAY",
-                "MAX_RETRIES",
-                "COMMAND_WORKERS",
-                "COMMAND_VERBOSITY",
+                    "RETRY_DELAY",
+                    "MAX_RETRIES",
+                    "COMMAND_WORKERS",
+                    "COMMAND_VERBOSITY",
             ):
                 value = int(value)
             data[name] = value
@@ -61,11 +61,8 @@ class CeleryHaystack(AppConf):
 
 signal_processor = getattr(settings, "HAYSTACK_SIGNAL_PROCESSOR", None)
 
-
 if signal_processor is None:
-    raise ImproperlyConfigured(
-        "When using celery-haystack with Haystack 2.X "
-        "the HAYSTACK_SIGNAL_PROCESSOR setting must be "
-        "set. Use 'celery_haystack.signals."
-        "CelerySignalProcessor' as default."
-    )
+    raise ImproperlyConfigured("When using celery-haystack with Haystack 2.X "
+                               "the HAYSTACK_SIGNAL_PROCESSOR setting must be "
+                               "set. Use 'celery_haystack.signals."
+                               "CelerySignalProcessor' as default.")
