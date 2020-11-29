@@ -70,7 +70,8 @@ class CeleryHaystackSignalHandler(Task):
         Fetch the model's registered ``SearchIndex`` in a standarized way.
         """
         try:
-            using_backends = connection_router.for_write(**{'models': [model_class]})
+            using_backends = connection_router.for_write(
+                **{'models': [model_class]})
             for using in using_backends:
                 index_holder = connections[using].get_unified_index()
                 yield index_holder.get_index(model_class), using
@@ -137,6 +138,7 @@ class CeleryHaystackUpdateIndex(Task):
     A celery task class to be used to call the update_index management
     command from Celery.
     """
+
     def run(self, apps=None, **kwargs):
         defaults = {
             'batchsize': settings.CELERY_HAYSTACK_COMMAND_BATCH_SIZE,
