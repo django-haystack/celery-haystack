@@ -4,10 +4,10 @@ arch:
     - ppc64le
 language: python
 python:
-  - "2.7"
+ # - "2.7"
   - "3.4"
   - "3.5"
-  - "3.6"
+ #- "3.6"
 before_install:
   - export DJANGO_SETTINGS_MODULE=celery_haystack.test_settings
 install:
