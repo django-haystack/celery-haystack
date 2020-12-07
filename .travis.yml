@@ -19,9 +19,9 @@ script:
   - coverage run --branch --source=celery_haystack `which django-admin.py` test celery_haystack
   - coverage report --omit=celery_haystack/test*
 env:
-  - DJANGO="Django>=1.8,<1.9"
-  - DJANGO="Django>=1.9,<1.10"
-  - DJANGO="Django>=1.10,<1.11"
+#  - DJANGO="Django>=1.8,<1.9"
+#  - DJANGO="Django>=1.9,<1.10"
+#  - DJANGO="Django>=1.10,<1.11"
   - DJANGO="Django>=1.11,<1.12"
 
 notifications:
