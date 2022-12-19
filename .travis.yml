@@ -1,24 +1,24 @@
 language: python
 python:
   - "2.7"
-  - "3.3"
   - "3.4"
   - "3.5"
+  - "3.6"
 before_install:
   - export DJANGO_SETTINGS_MODULE=celery_haystack.test_settings
 install:
   - pip install -e .
   - pip install -r requirements/v2.txt $DJANGO
 before_script:
-  - flake8 --version
-  - flake8 celery_haystack --ignore=E501
+  - flake8 celery_haystack --ignore=E501,E731
 script:
   - coverage run --branch --source=celery_haystack `which django-admin.py` test celery_haystack
   - coverage report --omit=celery_haystack/test*
 env:
-  - DJANGO="Django<1.10"
-  - DJANGO="Django<1.9"
-matrix:
-  exclude:
-  - env: DJANGO="Django<1.10"
-    python: "3.3"
+  - DJANGO="Django>=1.8,<1.9"
+  - DJANGO="Django>=1.9,<1.10"
+  - DJANGO="Django>=1.10,<1.11"
+  - DJANGO="Django>=1.11,<1.12"
+
+notifications:
+    irc: "irc.freenode.org#haystack"

@@ -4,13 +4,11 @@ from django.apps import apps
 
 from haystack import connections, connection_router
 from haystack.exceptions import NotHandled as IndexNotFoundException
-
-from celery import Task
+from django.db import connection as dconnect
+from celery import Task, shared_task  # noqa
 from celery.utils.log import get_task_logger
-
-from .conf import settings
-
 logger = get_task_logger(__name__)
+from client.models import OyClient
 
 get_model = apps.get_model
 
@@ -19,6 +17,7 @@ class CeleryHaystackSignalHandler(Task):
     using = settings.CELERY_HAYSTACK_DEFAULT_ALIAS
     max_retries = settings.CELERY_HAYSTACK_MAX_RETRIES
     default_retry_delay = settings.CELERY_HAYSTACK_RETRY_DELAY
+    # autoregister = False
 
     def split_identifier(self, identifier, **kwargs):
         """
@@ -56,6 +55,7 @@ class CeleryHaystackSignalHandler(Task):
         """
         Fetch the instance in a standarized way.
         """
+
         instance = None
         try:
             instance = model_class._default_manager.get(pk=pk)
@@ -85,6 +85,8 @@ class CeleryHaystackSignalHandler(Task):
         Trigger the actual index handler depending on the
         given action ('update' or 'delete').
         """
+        if kwargs.get("client"):
+            dconnect.set_tenant(OyClient.objects.get(pk=(kwargs.get("client"))))
         # First get the object path and pk (e.g. ('notes.note', 23))
         object_path, pk = self.split_identifier(identifier, **kwargs)
         if object_path is None or pk is None:
@@ -153,5 +155,16 @@ class CeleryHaystackUpdateIndex(Task):
             apps = settings.CELERY_HAYSTACK_COMMAND_APPS
         # Run the update_index management command
         logger.info("Starting update index")
-        call_command('update_index', *apps, **defaults)
+        call_command('update_tenant_index', *apps, **defaults)
         logger.info("Finishing update index")
+
+
+@shared_task()
+def haystack_signal(action, identifier, **kwargs):
+    task = CeleryHaystackSignalHandler()
+    task.run(action, identifier, **kwargs)
+
+
+@shared_task()
+def haystack_update_index(apps=None, **kwargs):
+    CeleryHaystackUpdateIndex().run(apps, **kwargs)
