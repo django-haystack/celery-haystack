@@ -15,7 +15,7 @@ class CeleryHaystack(AppConf):
     #: The number of retries that are done
     MAX_RETRIES = 1
     #: The default Celery task class
-    DEFAULT_TASK = 'celery_haystack.tasks.CeleryHaystackSignalHandler'
+    DEFAULT_TASK = 'celery_haystack.tasks.haystack_signal'
     #: The name of the celery queue to use, or None for default
     QUEUE = None
     #: Whether the task should be handled transaction safe
@@ -25,7 +25,7 @@ class CeleryHaystack(AppConf):
     COMMAND_BATCH_SIZE = None
     #: The max age of items used by the CeleryHaystackUpdateIndex task
     COMMAND_AGE = None
-    #: Whether to remove items from the index that aren't in the DB anymore
+    #: Wehther to remove items from the index that aren't in the DB anymore
     COMMAND_REMOVE = False
     #: The number of multiprocessing workers used by the CeleryHaystackUpdateIndex task
     COMMAND_WORKERS = 0
