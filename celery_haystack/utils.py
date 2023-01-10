@@ -33,13 +33,15 @@ def enqueue_task(action, instance, **kwargs):
     model instance.
     """
     identifier = get_identifier(instance)
-    connection.set_tenant(instance.client)
+    if instance.schema:
+        connection.set_schema(instance.schema)
+        kwargs['schema'] = instance.schema
     options = {}
     if settings.CELERY_HAYSTACK_QUEUE:
         options['queue'] = settings.CELERY_HAYSTACK_QUEUE
     if settings.CELERY_HAYSTACK_COUNTDOWN:
         options['countdown'] = settings.CELERY_HAYSTACK_COUNTDOWN
-    kwargs['client'] = instance.client.pk
+
     task = get_update_task()
     task_func = lambda: task.apply_async((action, identifier), kwargs, **options)
     if hasattr(transaction, 'on_commit'):

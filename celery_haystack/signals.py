@@ -29,7 +29,6 @@ class CelerySignalProcessor(BaseSignalProcessor):
         enqueue task.
         """
         using_backends = self.connection_router.for_write(instance=instance)
-
         for using in using_backends:
             try:
                 connection = self.connections[using]
