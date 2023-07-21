@@ -39,7 +39,9 @@ def enqueue_task(action, instance, **kwargs):
         options['countdown'] = settings.CELERY_HAYSTACK_COUNTDOWN
 
     task = get_update_task()
-    task_func = lambda: task.apply_async((action, identifier), kwargs, **options)  # noqa: E731
+    task_func = lambda: task.apply_async(  # noqa: E731
+        (action, identifier), kwargs, **options
+    )
 
     if hasattr(transaction, 'on_commit'):
         # Django 1.9 on_commit hook
