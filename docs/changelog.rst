@@ -13,8 +13,8 @@ v0.9 (2015-06-13)
 * Added ``CELERY_HAYSTACK_COUNTDOWN`` setting to define when to start the
   indexing task after initially creating it.
 
-* Stop returning after after enqueing in the Haystack router to support
-  multple routers.
+* Stop returning after enqueuing in the Haystack router to support
+  multiple routers.
 
 * Optionally support using django-transaction-hooks for improved transaction
   handling.
@@ -26,7 +26,7 @@ v0.9 (2015-06-13)
 v0.8 (2014-07-31)
 -----------------
 
-* Fix bug when using multiple Haystack indizes
+* Fix bug when using multiple Haystack indices
 
 * Fixed merge bug where primary key of object was cast to int
 
@@ -44,7 +44,7 @@ v0.7.2 (2013-03-23)
 v0.7.1 (2013-03-09)
 -------------------
 
-* Fixed an installation issues with d2to1.
+* Fixed installation issues with d2to1.
 
 v0.7 (2013-03-09)
 -----------------
@@ -118,7 +118,7 @@ v0.4 (2011-09-17)
   Please rebuild your Haystack indexes using the ``rebuild_index``
   management command.
 
-* Addded initial Sphinx documentation: http://celery-haystack.rtfd.org
+* Added initial Sphinx documentation: http://celery-haystack.rtfd.org
 
 * Revamped the tets to test the search results, not only queuing.
 
@@ -132,7 +132,7 @@ v0.3 (2011-08-22)
 
 * Moved configuration defaults handling to django-appconf_.
 
-* Fixed issue that occured when retrying a task.
+* Fixed issue that occurred when retrying a task.
 
 .. _django-appconf: http://pypi.python.org/pypi/django-appconf
 
