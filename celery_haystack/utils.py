@@ -28,7 +28,7 @@ def get_update_task(task_path=None):
 
 def enqueue_task(action, instance, **kwargs):
     """
-    Common utility for enqueing a task for the given action and
+    Common utility for enqueuing a task for the given action and
     model instance.
     """
     identifier = get_identifier(instance)
