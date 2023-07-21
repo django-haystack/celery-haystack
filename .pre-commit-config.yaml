@@ -1,0 +1,23 @@
+# To enable this pre-commit hook run:
+# `pip install pre-commit` or `brew install pre-commit`
+# Then run `pre-commit install`
+
+# Learn more about this config here: https://pre-commit.com/
+default_language_version:
+  python: python3.11
+
+ci:
+  submodules: true
+
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.0.278
+    hooks:
+      - id: ruff  # See pyproject.toml for args
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.5
+    hooks:
+      - id: codespell  # See pyproject.toml for args
+        additional_dependencies:
+          - tomli
