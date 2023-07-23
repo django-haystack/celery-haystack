@@ -28,7 +28,7 @@ class CeleryHaystackSignalHandler(Task):
 
         if len(bits) < 2:
             logger.error("Unable to parse object "
-                         "identifer '%s'. Moving on..." % identifier)
+                         "identifier '%s'. Moving on..." % identifier)
             return (None, None)
 
         pk = bits[-1]
@@ -38,7 +38,7 @@ class CeleryHaystackSignalHandler(Task):
 
     def get_model_class(self, object_path, **kwargs):
         """
-        Fetch the model's class in a standarized way.
+        Fetch the model's class in a standardized way.
         """
         bits = object_path.split('.')
         app_name = '.'.join(bits[:-1])
@@ -52,7 +52,7 @@ class CeleryHaystackSignalHandler(Task):
 
     def get_instance(self, model_class, pk, **kwargs):
         """
-        Fetch the instance in a standarized way.
+        Fetch the instance in a standardized way.
         """
         instance = None
         try:
@@ -67,7 +67,7 @@ class CeleryHaystackSignalHandler(Task):
 
     def get_indexes(self, model_class, **kwargs):
         """
-        Fetch the model's registered ``SearchIndex`` in a standarized way.
+        Fetch the model's registered ``SearchIndex`` in a standardized way.
         """
         try:
             using_backends = connection_router.for_write(**{'models': [model_class]})
@@ -117,7 +117,7 @@ class CeleryHaystackSignalHandler(Task):
                     raise ValueError("Couldn't load object '%s'" % identifier)
 
                 # Call the appropriate handler of the current index and
-                # handle exception if neccessary
+                # handle exception if necessary
                 try:
                     current_index.update_object(instance, using=using)
                 except Exception as exc:
