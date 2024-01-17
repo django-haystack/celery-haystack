@@ -14,6 +14,11 @@ repos:
     rev: v0.1.13
     hooks:
       - id: ruff  # See pyproject.toml for args
+        args: [clean]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.13
+    hooks:
+      - id: ruff  # See pyproject.toml for args
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.6

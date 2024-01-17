@@ -2,7 +2,7 @@
 # find typos in the codebase using codespell, and
 # lint Python code using ruff and provide intuitive GitHub Annotations to contributors.
 # https://github.com/codespell-project/codespell#readme
-# https://beta.ruff.rs
+# https://docs.astral.sh/ruff
 name: codespell_and_ruff
 on:
   push:
