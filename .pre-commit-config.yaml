@@ -10,11 +10,13 @@ ci:
   submodules: true
 
 repos:
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.11
+  - repo: local
     hooks:
-      - id: ruff  # See pyproject.toml for args
-        args: [clean]
+    - id: remove-ruff-cache
+      name: remove ruff cache
+      language: system
+      entry: rm -fr *ruff_cache
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.1.13
     hooks:
