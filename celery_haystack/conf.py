@@ -1,8 +1,8 @@
+from appconf import AppConf
 from django.conf import settings  # noqa
 from django.core.exceptions import ImproperlyConfigured
 from haystack import constants
 from haystack.management.commands import update_index as cmd
-from appconf import AppConf
 
 
 class CeleryHaystack(AppConf):
@@ -15,11 +15,13 @@ class CeleryHaystack(AppConf):
     #: The number of retries that are done
     MAX_RETRIES = 1
     #: The default Celery task class
-    DEFAULT_TASK = 'celery_haystack.tasks.CeleryHaystackSignalHandler'
+    DEFAULT_TASK = "celery_haystack.tasks.CeleryHaystackSignalHandler"
     #: The name of the celery queue to use, or None for default
     QUEUE = None
     #: Whether the task should be handled transaction safe
     TRANSACTION_SAFE = True
+    #: Whether the task results should be ignored
+    IGNORE_RESULT = False
 
     #: The batch size used by the CeleryHaystackUpdateIndex task
     COMMAND_BATCH_SIZE = None
@@ -35,26 +37,29 @@ class CeleryHaystack(AppConf):
     COMMAND_VERBOSITY = 1
 
     def configure_default_alias(self, value):
-        return value or getattr(constants, 'DEFAULT_ALIAS', None)
+        return value or getattr(constants, "DEFAULT_ALIAS", None)
 
     def configure_command_batch_size(self, value):
-        return value or getattr(cmd, 'DEFAULT_BATCH_SIZE', None)
+        return value or getattr(cmd, "DEFAULT_BATCH_SIZE", None)
 
     def configure_command_age(self, value):
-        return value or getattr(cmd, 'DEFAULT_AGE', None)
+        return value or getattr(cmd, "DEFAULT_AGE", None)
 
     def configure(self):
         data = {}
         for name, value in self.configured_data.items():
-            if name in ('RETRY_DELAY', 'MAX_RETRIES',
-                        'COMMAND_WORKERS', 'COMMAND_VERBOSITY'):
+            if name in (
+                    "RETRY_DELAY",
+                    "MAX_RETRIES",
+                    "COMMAND_WORKERS",
+                    "COMMAND_VERBOSITY",
+            ):
                 value = int(value)
             data[name] = value
         return data
 
 
-signal_processor = getattr(settings, 'HAYSTACK_SIGNAL_PROCESSOR', None)
-
+signal_processor = getattr(settings, "HAYSTACK_SIGNAL_PROCESSOR", None)
 
 if signal_processor is None:
     raise ImproperlyConfigured("When using celery-haystack with Haystack 2.X "
