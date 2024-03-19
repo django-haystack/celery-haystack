@@ -6,22 +6,37 @@ celery-haystack
     :alt: Build Status
     :target: http://travis-ci.org/django-haystack/celery-haystack
 
+
 This Django app allows you to utilize Celery for automatically updating and
 deleting objects in a Haystack_ search index.
+
+
+| Src: https://github.com/django-haystack/celery-haystack
+| Docs: https://celery-haystack.readthedocs.io/en/latest/
+| PyPI: https://pypi.python.org/pypi/celery-haystack
 
 Requirements
 ------------
 
-* Django 1.8+
-* Haystack_ `2.X`_
-* Celery_ 3.X
+* Django_ `1.8+`_
+* Haystack_ 2.X_
+* Celery_ 3.X_
 
 You also need to install your choice of one of the supported search engines
-for Haystack and one of the supported backends for Celery.
+for Haystack and one of the supported backends for Celery:
 
+* https://django-haystack.readthedocs.io/en/latest/backend_support.html#backend-support-matrix
+* https://django-haystack.readthedocs.io/en/latest/installing_search_engines.html
+* https://django-haystack.readthedocs.io/en/latest/settings.html
+* http://docs.celeryproject.org/en/latest/getting-started/brokers/#broker-overview
+* http://docs.celeryproject.org/en/latest/configuration.html
 
-.. _Haystack: http://haystacksearch.org
-.. _Celery: http://www.celeryproject.org
+.. _Django: https://www.djangoproject.com/
+.. _1.8+: https://github.com/django/django
+.. _Haystack: http://haystacksearch.org/
+.. _2.X: https://github.com/django-haystack/django-haystack
+.. _Celery: http://www.celeryproject.org/
+.. _3.X: https://github.com/celery/celery
 
 
 Installation
@@ -82,7 +97,6 @@ app but uses Ask Solem Hoel's Celery_ instead of the equally awesome
 queues_ library by Matt Croyden.
 
 .. _queued_search: https://github.com/toastdriven/queued_search/
-.. _Celery: http://celeryproject.org/
 .. _queues: http://code.google.com/p/queues/
 
 Issues
