@@ -7,6 +7,7 @@ default_language_version:
   python: python3.11
 
 ci:
+  autoupdate_schedule: monthly
   submodules: true
 
 repos:
