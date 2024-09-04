@@ -71,9 +71,14 @@ class CeleryHaystackSignalHandler(Task):
         """
         try:
             using_backends = connection_router.for_write(**{'models': [model_class]})
+            index_found = False
             for using in using_backends:
                 index_holder = connections[using].get_unified_index()
-                yield index_holder.get_index(model_class), using
+                if model_class in index_holder.get_indexed_models():
+                    index_found = True
+                    yield index_holder.get_index(model_class), using
+            if not index_found:
+                raise IndexNotFoundException
         except IndexNotFoundException:
             raise ImproperlyConfigured("Couldn't find a SearchIndex for %s." %
                                        model_class)
