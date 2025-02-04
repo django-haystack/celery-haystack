@@ -12,12 +12,12 @@ ci:
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.6
+    rev: v0.9.4
     hooks:
       - id: ruff  # See pyproject.toml for args
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.3.0
+    rev: v2.4.1
     hooks:
       - id: codespell  # See pyproject.toml for args
         additional_dependencies:
