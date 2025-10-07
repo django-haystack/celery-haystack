@@ -1,4 +1,4 @@
-# To enable this pre-commit hook run:
+# To enable this pre-commit hook, run:
 # `pip install pre-commit` or `brew install pre-commit`
 # Then run `pre-commit install`
 
@@ -12,7 +12,7 @@ ci:
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.11
+    rev: v0.13.3
     hooks:
       - id: ruff  # See pyproject.toml for args
 
