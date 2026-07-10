@@ -17,6 +17,8 @@ class CeleryHaystackSignalHandler(Task):
     using = settings.CELERY_HAYSTACK_DEFAULT_ALIAS
     max_retries = settings.CELERY_HAYSTACK_MAX_RETRIES
     default_retry_delay = settings.CELERY_HAYSTACK_RETRY_DELAY
+    ignore_result = settings.CELERY_HAYSTACK_IGNORE_RESULT
+    store_errors_even_if_ignored = True
 
     def split_identifier(self, identifier, **kwargs):
         """
