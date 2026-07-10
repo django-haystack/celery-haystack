@@ -1,6 +1,6 @@
-django-discover-runner
-django-haystack
-celery
-Whoosh
-flake8
-coverage
+django-discover-runner==1.0
+django-haystack==3.0
+celery==3.1.26.post2
+Whoosh==2.7.4
+flake8==3.8.4
+coverage==5.5
