@@ -1,6 +1,5 @@
 from django.core.management import call_command
 from django.test import TransactionTestCase
-
 from haystack.query import SearchQuerySet
 
 from .models import Note
@@ -12,7 +11,7 @@ class QueuedSearchIndexTestCase(TransactionTestCase):
         self.assertEqual(count, len(SearchQuerySet()))
 
     def assertSearchResultContains(self, pk, text):
-        results = SearchQuerySet().filter(id='tests.note.%s' % pk)
+        results = SearchQuerySet().filter(id=f'tests.note.{pk}')
         self.assertTrue(results)
         self.assertTrue(text in results[0].text)
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # celery-haystack documentation build configuration file, created by
 # sphinx-quickstart on Sat Sep 17 14:02:10 2011.
@@ -41,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'celery-haystack'
-copyright = u'2011-2013, Jannis Leidel and contributors'
+project = 'celery-haystack'
+copyright = '2011-2013, Jannis Leidel and contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -183,8 +182,8 @@ htmlhelp_basename = 'celery-haystackdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'celery-haystack.tex', u'celery-haystack Documentation',
-   u'Jannis Leidel', 'manual'),
+  ('index', 'celery-haystack.tex', 'celery-haystack Documentation',
+   'Jannis Leidel', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -216,8 +215,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'celery-haystack', u'celery-haystack Documentation',
-     [u'Jannis Leidel'], 1)
+    ('index', 'celery-haystack', 'celery-haystack Documentation',
+     ['Jannis Leidel'], 1)
 ]
 
 

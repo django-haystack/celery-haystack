@@ -1,10 +1,9 @@
 from django.db.models import signals
-
-from haystack.signals import BaseSignalProcessor
 from haystack.exceptions import NotHandled
+from haystack.signals import BaseSignalProcessor
 
-from .utils import enqueue_task
 from .indexes import CelerySearchIndex
+from .utils import enqueue_task
 
 
 class CelerySignalProcessor(BaseSignalProcessor):
