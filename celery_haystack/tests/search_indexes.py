@@ -1,7 +1,7 @@
 from haystack import indexes
 
-from .models import Note
 from ..indexes import CelerySearchIndex
+from .models import Note
 
 
 # Simplest possible subclass that could work.

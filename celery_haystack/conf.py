@@ -30,7 +30,7 @@ class CeleryHaystack(AppConf):
     #: The number of multiprocessing workers used by the CeleryHaystackUpdateIndex task
     COMMAND_WORKERS = 0
     #: The names of apps to run update_index for
-    COMMAND_APPS = []
+    COMMAND_APPS = []  # noqa: RUF012
     #: The verbosity level of the update_index call
     COMMAND_VERBOSITY = 1
 

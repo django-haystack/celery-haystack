@@ -1,14 +1,12 @@
+from celery.task import Task
+from celery.utils.log import get_task_logger
+from django.apps import apps
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
-from django.apps import apps
-
-from .conf import settings
-
-from haystack import connections, connection_router
+from haystack import connection_router, connections
 from haystack.exceptions import NotHandled as IndexNotFoundException
 
-from celery.task import Task  # noqa
-from celery.utils.log import get_task_logger
+from .conf import settings
 
 logger = get_task_logger(__name__)
 
@@ -28,7 +26,7 @@ class CeleryHaystackSignalHandler(Task):
 
         if len(bits) < 2:
             logger.error("Unable to parse object "
-                         "identifier '%s'. Moving on..." % identifier)
+                         f"identifier '{identifier}'. Moving on...")
             return (None, None)
 
         pk = bits[-1]
@@ -46,8 +44,7 @@ class CeleryHaystackSignalHandler(Task):
         model_class = apps.get_model(app_name, classname)
 
         if model_class is None:
-            raise ImproperlyConfigured("Could not load model '%s'." %
-                                       object_path)
+            raise ImproperlyConfigured(f"Could not load model '{object_path}'.")
         return model_class
 
     def get_instance(self, model_class, pk, **kwargs):
@@ -58,11 +55,9 @@ class CeleryHaystackSignalHandler(Task):
         try:
             instance = model_class._default_manager.get(pk=pk)
         except model_class.DoesNotExist:
-            logger.error("Couldn't load %s.%s.%s. Somehow it went missing?" %
-                         (model_class._meta.app_label.lower(),
-                          model_class._meta.object_name.lower(), pk))
+            logger.error(f"Couldn't load {model_class._meta.app_label.lower()}.{model_class._meta.object_name.lower()}.{pk}. Somehow it went missing?")
         except model_class.MultipleObjectsReturned:
-            logger.error("More than one object with pk %s. Oops?" % pk)
+            logger.error(f"More than one object with pk {pk}. Oops?")
         return instance
 
     def get_indexes(self, model_class, **kwargs):
@@ -70,13 +65,12 @@ class CeleryHaystackSignalHandler(Task):
         Fetch the model's registered ``SearchIndex`` in a standardized way.
         """
         try:
-            using_backends = connection_router.for_write(**{'models': [model_class]})
+            using_backends = connection_router.for_write(models=[model_class])
             for using in using_backends:
                 index_holder = connections[using].get_unified_index()
                 yield index_holder.get_index(model_class), using
         except IndexNotFoundException:
-            raise ImproperlyConfigured("Couldn't find a SearchIndex for %s." %
-                                       model_class)
+            raise ImproperlyConfigured(f"Couldn't find a SearchIndex for {model_class}.")
 
     def run(self, action, identifier, **kwargs):
         """
@@ -86,15 +80,14 @@ class CeleryHaystackSignalHandler(Task):
         # First get the object path and pk (e.g. ('notes.note', 23))
         object_path, pk = self.split_identifier(identifier, **kwargs)
         if object_path is None or pk is None:
-            msg = "Couldn't handle object with identifier %s" % identifier
+            msg = f"Couldn't handle object with identifier {identifier}"
             logger.error(msg)
             raise ValueError(msg)
 
         # Then get the model class for the object path
         model_class = self.get_model_class(object_path, **kwargs)
         for current_index, using in self.get_indexes(model_class, **kwargs):
-            current_index_name = ".".join([current_index.__class__.__module__,
-                                           current_index.__class__.__name__])
+            current_index_name = f'{current_index.__class__.__module__}.{current_index.__class__.__name__}'
 
             if action == 'delete':
                 # If the object is gone, we'll use just the identifier
@@ -102,34 +95,31 @@ class CeleryHaystackSignalHandler(Task):
                 try:
                     current_index.remove_object(identifier, using=using)
                 except Exception as exc:
-                    logger.exception(exc)
+                    logger.exception()
                     self.retry(exc=exc)
                 else:
-                    msg = ("Deleted '%s' (with %s)" %
-                           (identifier, current_index_name))
+                    msg = (f"Deleted '{identifier}' (with {current_index_name})")
                     logger.debug(msg)
             elif action == 'update':
                 # and the instance of the model class with the pk
                 instance = self.get_instance(model_class, pk, **kwargs)
                 if instance is None:
-                    logger.debug("Failed updating '%s' (with %s)" %
-                                 (identifier, current_index_name))
-                    raise ValueError("Couldn't load object '%s'" % identifier)
+                    logger.debug(f"Failed updating '{identifier}' (with {current_index_name})")
+                    raise ValueError(f"Couldn't load object '{identifier}'")
 
                 # Call the appropriate handler of the current index and
                 # handle exception if necessary
                 try:
                     current_index.update_object(instance, using=using)
                 except Exception as exc:
-                    logger.exception(exc)
+                    logger.exception()
                     self.retry(exc=exc)
                 else:
-                    msg = ("Updated '%s' (with %s)" %
-                           (identifier, current_index_name))
+                    msg = (f"Updated '{identifier}' (with {current_index_name})")
                     logger.debug(msg)
             else:
-                logger.error("Unrecognized action '%s'. Moving on..." % action)
-                raise ValueError("Unrecognized action %s" % action)
+                logger.error(f"Unrecognized action '{action}'. Moving on...")
+                raise ValueError(f"Unrecognized action {action}")
 
 
 class CeleryHaystackUpdateIndex(Task):

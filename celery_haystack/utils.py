@@ -1,10 +1,10 @@
 from django.core.exceptions import ImproperlyConfigured
+
 try:
     from importlib import import_module
 except ImportError:
     from django.utils.importlib import import_module
 from django.db import connection, transaction
-
 from haystack.utils import get_identifier
 
 from .conf import settings
@@ -16,13 +16,12 @@ def get_update_task(task_path=None):
     try:
         mod = import_module(module)
     except ImportError as e:
-        raise ImproperlyConfigured('Error importing module %s: "%s"' %
-                                   (module, e))
+        raise ImproperlyConfigured(f'Error importing module {module}: "{e}"')
     try:
         Task = getattr(mod, attr)
     except AttributeError:
-        raise ImproperlyConfigured('Module "%s" does not define a "%s" '
-                                   'class.' % (module, attr))
+        raise ImproperlyConfigured(f'Module "{module}" does not define a "{attr}" '
+                                   'class.')
     return Task()
 
 
@@ -39,7 +38,7 @@ def enqueue_task(action, instance, **kwargs):
         options['countdown'] = settings.CELERY_HAYSTACK_COUNTDOWN
 
     task = get_update_task()
-    task_func = lambda: task.apply_async(  # noqa: E731
+    task_func = lambda: task.apply_async(
         (action, identifier), kwargs, **options
     )
 
